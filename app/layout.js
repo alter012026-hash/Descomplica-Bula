@@ -5,6 +5,7 @@ import "./styles/article.css";
 import "./styles/pages.css";
 import "./styles/transitions.css";
 import "./styles/health.css";
+import "./styles/medication-search.css";
 import { Bricolage_Grotesque, Literata } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import AdSenseScript from "../components/AdSenseScript";

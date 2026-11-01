@@ -27,6 +27,7 @@ export default function HomePage() {
               Conteúdo informativo que não substitui orientação profissional.
             </p>
             <div className="hero-actions">
+              <Link href="/buscar-medicamentos" className="btn btn--hl">Buscar medicamento</Link>
               <Link href="/blog" className="btn btn--hl">Explorar conteúdos</Link>
               <Link href="/fontes-oficiais" className="btn btn--ghost">Consultar fontes oficiais</Link>
             </div>

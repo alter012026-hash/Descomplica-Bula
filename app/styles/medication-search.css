@@ -1,0 +1,63 @@
+.medication-search-page { max-width: 900px; }
+.medication-search-header { margin-bottom: 20px; }
+.medication-search-notice { margin-bottom: 22px; }
+.medication-search-form { display: grid; gap: 8px; }
+.medication-search-form > label { font-weight: 750; }
+.medication-search-controls { display: flex; gap: 10px; }
+.medication-search-controls input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.medication-search-controls button { min-width: 125px; }
+.medication-search-form > p,
+.medication-search-disclaimer { color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
+.medication-search-error {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 14px;
+  border-left: 4px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--hl-soft);
+}
+.medication-search-error a,
+.medication-search-card > a { color: var(--link); font-weight: 750; text-underline-offset: 3px; }
+.medication-search-results { margin-top: 28px; }
+.medication-search-result-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.medication-search-result-heading h2 { font-size: 1.25rem; }
+.medication-search-result-heading span { color: var(--text-muted); font-size: 0.78rem; }
+.medication-search-grid { display: grid; gap: 12px; }
+.medication-search-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.medication-search-card h3 { font-size: 1rem; line-height: 1.4; }
+.medication-search-card dl { display: grid; gap: 8px; margin: 0; }
+.medication-search-card dl > div { display: grid; grid-template-columns: minmax(110px, 0.35fr) 1fr; gap: 12px; }
+.medication-search-card dt { color: var(--text-muted); font-size: 0.8rem; }
+.medication-search-card dd { margin: 0; font-size: 0.84rem; overflow-wrap: anywhere; }
+.medication-search-disclaimer { margin-top: 24px; }
+
+@media (max-width: 560px) {
+  .medication-search-controls { flex-direction: column; }
+  .medication-search-controls button { width: 100%; }
+  .medication-search-result-heading { align-items: flex-start; flex-direction: column; }
+  .medication-search-card dl > div { grid-template-columns: 1fr; gap: 2px; }
+}
