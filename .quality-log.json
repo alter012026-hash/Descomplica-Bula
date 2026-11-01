@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "timestamp": "2026-11-01T02:56:35.356Z",
+    "file": "2026-10-31-20-reuniao-ordinaria-publica-da-anvisa-prorrogacao-do-periodo-de-transicao-para-.md",
+    "slug": "20-reuniao-ordinaria-publica-da-anvisa-prorrogacao-do-periodo-de-transicao-para-",
+    "title": "20ª Reunião Ordinária Pública da ANVISA: Prorrogação do Período de Transição para Receitas Eletrônicas no Sncr",
+    "category": "Alertas da Anvisa",
+    "provider": "Groq",
+    "wordCount": 793,
+    "fillerCount": 0,
+    "similarity": 0,
+    "similarTo": null,
+    "status": "NEEDS_REVIEW",
+    "issues": []
+  }
+]
