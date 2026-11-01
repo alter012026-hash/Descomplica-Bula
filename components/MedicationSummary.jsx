@@ -18,6 +18,7 @@ export default function MedicationSummary() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
   const [summary, setSummary] = useState(null);
+  const [officialLeafletUrl, setOfficialLeafletUrl] = useState("");
 
   function handleImageChange(event) {
     const selected = event.target.files?.[0] || null;
@@ -39,6 +40,7 @@ export default function MedicationSummary() {
     setStatus("loading");
     setError("");
     setSummary(null);
+    setOfficialLeafletUrl("");
 
     try {
       const form = new FormData();
@@ -51,7 +53,11 @@ export default function MedicationSummary() {
         body: form,
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "Não foi possível gerar o resumo.");
+      if (!response.ok) {
+        setError(data.error || "Não foi possível gerar o resumo.");
+        setOfficialLeafletUrl(data.officialLeafletUrl || "");
+        return;
+      }
       if (data.urgent) {
         setError(data.message);
         return;
@@ -123,20 +129,41 @@ export default function MedicationSummary() {
       </form>
 
       <p className="med-summary-disclaimer">
-        A IA pode errar e não consulta automaticamente a bula vigente desse produto. Não fornece doses
-        nem orientação de uso. Confira sempre a bula oficial e converse com um profissional de saúde.
+        O resumo usa o texto da bula do paciente localizado na consulta oficial da Anvisa. Se a bula
+        não puder ser confirmada ou lida, o resumo não é gerado. Não fornece doses nem orientação de uso.
+        Confira a bula completa e converse com um profissional de saúde.
       </p>
       <p className="med-summary-privacy">
-        A imagem é enviada ao serviço de IA para análise e não é salva pelo site.
+        Se você enviar apenas uma foto, ela será processada por um serviço de IA somente para ler o nome
+        do medicamento. A imagem não é salva pelo site.
       </p>
 
       {error && <p className="med-summary-error" role="alert">{error}</p>}
+      {officialLeafletUrl && (
+        <p>
+          <a
+            className="med-summary-source"
+            href={officialLeafletUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir o Bulário Eletrônico da Anvisa
+          </a>
+        </p>
+      )}
 
       {summary && (
         <div className="med-summary-result" aria-live="polite">
           <div className="med-summary-identity">
             <h3>{summary.medicineName}</h3>
             {summary.activeIngredient && <p>Princípio ativo: {summary.activeIngredient}</p>}
+            {summary.officialSource?.manufacturer && <p>Fabricante: {summary.officialSource.manufacturer}</p>}
+            {summary.officialSource?.accessedAt && (
+              <p>
+                Bula do paciente consultada na Anvisa em{" "}
+                {new Date(summary.officialSource.accessedAt).toLocaleDateString("pt-BR")}.
+              </p>
+            )}
           </div>
           {SECTIONS.map(([key, title]) => (
             <section className="med-summary-result-section" key={key}>

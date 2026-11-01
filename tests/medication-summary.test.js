@@ -1,8 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
+  buildMedicationIdentityPrompt,
   buildMedicationSummaryPrompt,
   hasDoseInstruction,
+  parseMedicationIdentity,
   parseMedicationSummary,
 } = require("../lib/medication-summary");
 
@@ -10,13 +12,31 @@ test("summary prompt includes product identity and forbids dosage guidance", () 
   const prompt = buildMedicationSummaryPrompt({
     medicineName: "Medicamento X",
     strength: "comprimido",
-    hasImage: true,
+    officialLeaflet: {
+      medicineName: "Medicamento X",
+      manufacturer: "Fabricante X",
+      registration: "123",
+      text: "A bula informa a finalidade do medicamento.",
+    },
   });
 
   assert.match(prompt, /Medicamento X/);
-  assert.match(prompt, /foto/);
+  assert.match(prompt, /Fabricante X/);
+  assert.match(prompt, /A bula informa a finalidade/);
+  assert.match(prompt, /somente fatos que estejam claramente sustentados/);
   assert.match(prompt, /Não indique doses/);
   assert.match(prompt, /JSON válido/);
+});
+
+test("identity prompt requests only visible package text", () => {
+  assert.match(buildMedicationIdentityPrompt(), /Não deduza/);
+  assert.deepEqual(parseMedicationIdentity('{"medicineName":"Remédio X"}'), {
+    medicineName: "Remédio X",
+  });
+  assert.deepEqual(parseMedicationIdentity('{"medicineName":"","strength":""}'), {
+    medicineName: "",
+  });
+  assert.throws(() => parseMedicationIdentity("not json"), /ler o nome/);
 });
 
 test("summary parser validates fields and limits list length", () => {

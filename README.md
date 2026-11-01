@@ -21,7 +21,7 @@ O deploy de produção já é feito pela integração nativa Vercel-GitHub a cad
 | Automação | Variáveis na Vercel | GitHub Actions secrets | Observações |
 | --- | --- | --- | --- |
 | Admin (`/admin`) | `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | — | Defina uma senha forte e gere um segredo aleatório. |
-| Resumo da bula | `GROQ_API_KEY` ou `GEMINI_API_KEY` | — | O Groq é tentado primeiro; Gemini é usado como fallback. Configure pelo menos uma chave na Vercel. |
+| Resumo da bula | `GROQ_API_KEY` ou `GEMINI_API_KEY` | — | A API consulta e extrai o texto da bula do paciente no Bulário da Anvisa antes de resumir. O Groq é tentado primeiro; Gemini é usado como fallback. Configure pelo menos uma chave na Vercel. |
 | Rascunhos diários com IA | Uma chave: `GROK_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` ou `GEMINI_API_KEY` | A mesma chave, com o mesmo nome | O workflow gera rascunhos para revisão; não publica artigos automaticamente. |
 | Newsletter diária | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEWSLETTER_CRON_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `NEWSLETTER_CRON_SECRET`, `SITE_URL` | Use o mesmo segredo cron nos dois painéis, um remetente verificado no Resend e um token GitHub com acesso de leitura e escrita ao repositório. O `SITE_URL` deve ser a URL pública implantada. |
 | Métricas persistentes | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash. O projeto usa o prefixo `descomplica-bula:` nas chaves e pode compartilhar uma base; nesse caso, os limites de uso são compartilhados entre projetos. |
@@ -39,7 +39,8 @@ Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, 
 - Artigos gerados e enviados manualmente passam por verificações automáticas e devem ser aprovados por uma pessoa antes da publicação.
 - A validação exige fontes HTTPS de domínios permitidos, referência à bula oficial, avisos de segurança e contatos de emergência. Ela não substitui revisão clínica e editorial.
 - O recurso “Tire sua dúvida” responde com base no artigo e encaminha perguntas de risco para serviços de emergência. Não use a resposta para decidir tratamento ou dose.
-- O Resumo da bula usa `GROQ_API_KEY` ou `GEMINI_API_KEY` na Vercel. Se nenhum provedor estiver configurado, o próprio formulário informa qual variável precisa ser adicionada.
+- O Resumo da bula consulta a busca e o arquivo da bula do paciente no Bulário Eletrônico da Anvisa. Só gera o resumo quando encontra uma correspondência exata, baixa um PDF válido e consegue extrair texto; se a Anvisa bloquear/indisponibilizar a consulta, houver ambiguidade ou o PDF não puder ser lido, não usa a IA como fallback factual e mostra o link para consulta manual.
+- O Resumo da bula usa `GROQ_API_KEY` ou `GEMINI_API_KEY` na Vercel. Se nenhum provedor estiver configurado, o próprio formulário informa qual variável precisa ser adicionada. Para uma foto sem nome digitado, a IA é usada apenas para ler o texto visível da embalagem; a bula ainda precisa ser confirmada na Anvisa.
 - Em uma emergência, ligue para o SAMU (192) ou para o Disque-Intoxicação (0800 722 6001). Em crise emocional, ligue para o CVV (188).
 
 ## Comandos

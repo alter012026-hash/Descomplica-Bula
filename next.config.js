@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  serverExternalPackages: ["pdf-parse"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
