@@ -3,6 +3,7 @@ import PostCard from "../components/PostCard";
 import LatestCarousel from "../components/LatestCarousel";
 import CategoryCards from "../components/CategoryCards";
 import QuickStart from "../components/QuickStart";
+import MedicationSummary from "../components/MedicationSummary";
 import HeroSheet from "../components/HeroSheet";
 import { getAllPosts, getCategoryStats } from "../lib/posts";
 import config from "../site.config";
@@ -35,7 +36,7 @@ export default function HomePage() {
                 : "Todo conteúdo é revisado antes de ser publicado."}
             </p>
           </div>
-          <QuickStart />
+          <MedicationSummary />
         </div>
       </section>
 
@@ -44,6 +45,12 @@ export default function HomePage() {
           <strong>Importante:</strong> não use, interrompa ou altere um medicamento por conta
           própria. Confira a bula oficial e converse com um profissional de saúde.
           <Link href="/aviso-de-saude">Leia o aviso de saúde</Link>
+        </div>
+      </section>
+
+      <section className="section section--alt home-shortcuts">
+        <div className="container">
+          <QuickStart />
         </div>
       </section>
 
