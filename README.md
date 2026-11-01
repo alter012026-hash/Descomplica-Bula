@@ -21,12 +21,11 @@ O deploy de produção já é feito pela integração nativa Vercel-GitHub a cad
 | Automação | Variáveis na Vercel | GitHub Actions secrets | Observações |
 | --- | --- | --- | --- |
 | Admin (`/admin`) | `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | — | Defina uma senha forte e gere um segredo aleatório. |
-| Resumo da bula | `GROQ_API_KEY` ou `GEMINI_API_KEY` | — | O usuário baixa a bula no Bulário da Anvisa e envia o PDF; a API extrai o texto e o envia ao serviço de IA. O Groq é tentado primeiro; Gemini é usado como fallback. Configure pelo menos uma chave na Vercel. |
 | Busca de medicamentos | `MEDICAMENTOS_API_KEY` | — | Catálogo de terceiro disponível no plano Free, consultado pelo backend. A API não é oficial da Anvisa; a página oferece link ao Bulário oficial. |
 | Consulta CID | `CID_API_KEY` | — | Consulta individual de códigos CID-10 e CID-11 no plano Free da API cid. Busca por descrição e dados previdenciários exigem Pro e não são usados. |
 | Rascunhos diários com IA | Uma chave: `GROK_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` ou `GEMINI_API_KEY` | A mesma chave, com o mesmo nome | O workflow gera rascunhos para revisão; não publica artigos automaticamente. |
 | Newsletter diária | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEWSLETTER_CRON_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `NEWSLETTER_CRON_SECRET`, `SITE_URL` | Use o mesmo segredo cron nos dois painéis, um remetente verificado no Resend e um token GitHub com acesso de leitura e escrita ao repositório. O `SITE_URL` deve ser a URL pública implantada. |
-| Métricas e controle de funcionalidades | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash. Obrigatórias para o estado persistente do controle do Resumo da bula no admin; sem Redis, o recurso fica indisponível e desativado. O projeto usa o prefixo `descomplica-bula:` nas chaves. |
+| Métricas | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash para persistência de métricas. O projeto usa o prefixo `descomplica-bula:` nas chaves. |
 
 `GITHUB_TOKEN` e `GITHUB_REPO` na Vercel são necessários para ações do painel administrativo que escrevem no GitHub e para a newsletter atualizar seu estado de envio. O token deve ter permissão de conteúdo de leitura e escrita no repositório. O workflow de geração usa o `GITHUB_TOKEN` automático do Actions, com permissão de escrita no repositório. `VERCEL_DEPLOY_HOOK` é opcional para acionamentos extras e não é necessário para o deploy normal.
 
@@ -41,11 +40,8 @@ Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, 
 - Artigos gerados e enviados manualmente passam por verificações automáticas e devem ser aprovados por uma pessoa antes da publicação.
 - A validação exige fontes HTTPS de domínios permitidos, referência à bula oficial, avisos de segurança e contatos de emergência. Ela não substitui revisão clínica e editorial.
 - O recurso “Tire sua dúvida” responde com base no artigo e encaminha perguntas de risco para serviços de emergência. Não use a resposta para decidir tratamento ou dose.
-- O Resumo da bula exige que o usuário informe o nome do medicamento, abra o Bulário Eletrônico da Anvisa, baixe a bula do paciente e envie o PDF. O site confere se nome e concentração informados aparecem no texto extraído, mas não confirma a autenticidade nem a vigência do arquivo; PDFs sem texto legível não são aceitos.
-- O Resumo da bula começa desativado. Para exibi-lo e aceitar solicitações, ative-o em **Admin → Configurações → Resumo da bula**. O estado é salvo no Upstash Redis; o endpoint também bloqueia solicitações quando o recurso está desligado.
 - A busca em `/buscar-medicamentos` consulta somente o catálogo gratuito de `medicamentos.api.br` por nome digitado (sem busca por foto ou envio de imagem), com chave mantida no servidor, limite local por IP, até 10 resultados e timeout. Essa API é de terceiro e declara usar dados da Anvisa; não é fonte oficial. O buscador não baixa nem resume bulas. Em falhas ou limite excedido, a página direciona ao Bulário oficial.
 - A consulta em `/consultar-cid` procura códigos individuais CID-10 ou CID-11 pela API cid, usando `CID_API_KEY` somente no servidor. O plano Free permite consultar por código, com limite mensal; busca por descrição e correlação com regras do INSS exigem Pro e não são chamadas pelo site. A classificação CID não é diagnóstico.
-- O PDF não é armazenado pelo site. Seu texto extraído é enviado ao provedor de IA configurado para elaborar o resumo. O recurso não informa doses nem orienta tratamento. Configure `GROQ_API_KEY` ou `GEMINI_API_KEY` na Vercel; o formulário informa quando não há provedor disponível.
 - Em uma emergência, ligue para o SAMU (192) ou para o Disque-Intoxicação (0800 722 6001). Em crise emocional, ligue para o CVV (188).
 
 ## Comandos

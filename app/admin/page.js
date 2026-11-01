@@ -944,28 +944,12 @@ function ConfigTab({ toast }) {
   const [cfg, setCfg] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [medicationSummaryEnabled, setMedicationSummaryEnabled] = useState(false);
-  const [featureFlagLoading, setFeatureFlagLoading] = useState(true);
-  const [featureFlagSaving, setFeatureFlagSaving] = useState(false);
-  const [featureFlagError, setFeatureFlagError] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/config")
       .then((r) => r.json())
       .then((d) => { setCfg(d); setLoading(false); })
       .catch(() => { toast("Erro ao carregar configurações", "error"); setLoading(false); });
-
-    fetch("/api/admin/feature-flags")
-      .then(async (response) => {
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Erro ao carregar o estado do recurso.");
-        setMedicationSummaryEnabled(data.medicationSummaryEnabled === true);
-        setFeatureFlagError("");
-      })
-      .catch((error) => {
-        setFeatureFlagError(error.message);
-      })
-      .finally(() => setFeatureFlagLoading(false));
   }, []);
 
   async function handleSave() {
@@ -979,28 +963,6 @@ function ConfigTab({ toast }) {
     setSaving(false);
     if (d.ok) toast("Configurações salvas!");
     else toast(d.error || "Erro ao salvar", "error");
-  }
-
-  async function toggleMedicationSummary() {
-    setFeatureFlagSaving(true);
-    setFeatureFlagError("");
-    try {
-      const nextValue = !medicationSummaryEnabled;
-      const response = await fetch("/api/admin/feature-flags", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ medicationSummaryEnabled: nextValue }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Não foi possível salvar o estado do recurso.");
-      setMedicationSummaryEnabled(data.medicationSummaryEnabled);
-      toast(nextValue ? "Resumo da bula ativado." : "Resumo da bula desativado.");
-    } catch (error) {
-      setFeatureFlagError(error.message);
-      toast(error.message, "error");
-    } finally {
-      setFeatureFlagSaving(false);
-    }
   }
 
   if (loading || !cfg) return <p style={{ color: C.textMuted }}>Carregando configurações…</p>;
@@ -1032,43 +994,6 @@ function ConfigTab({ toast }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={s.card}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, marginBottom: 10 }}>
-          <div style={s.sectionTitle}>💊 Resumo da bula</div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={medicationSummaryEnabled}
-            onClick={toggleMedicationSummary}
-            disabled={featureFlagLoading || featureFlagSaving || Boolean(featureFlagError)}
-            style={{
-              background: medicationSummaryEnabled ? C.greenGlow : "transparent",
-              border: `1px solid ${medicationSummaryEnabled ? C.green + "44" : C.border}`,
-              borderRadius: 999, padding: "4px 14px",
-              color: medicationSummaryEnabled ? C.green : C.textFaint,
-              fontSize: 12, fontWeight: 700, cursor: "pointer",
-              display: "flex", alignItems: "center", gap: 6,
-            }}
-          >
-            <span style={{
-              width: 8, height: 8, borderRadius: "50%",
-              background: medicationSummaryEnabled ? C.green : C.textFaint,
-              display: "inline-block",
-            }} />
-            {featureFlagLoading ? "Carregando…" : featureFlagSaving ? "Salvando…" : medicationSummaryEnabled ? "Ativado" : "Desativado"}
-          </button>
-        </div>
-        <p style={{ color: C.textMuted, fontSize: 13, lineHeight: 1.6 }}>
-          Controle se a ferramenta aparece na página inicial e aceita novas solicitações. A alteração é salva imediatamente.
-          O padrão é desativado.
-        </p>
-        {featureFlagError && (
-          <p role="alert" style={{ color: C.red, fontSize: 12, marginTop: 10 }}>
-            Não foi possível carregar/salvar esta configuração: {featureFlagError} Verifique a configuração/conexão do Upstash Redis e recarregue o painel.
-          </p>
-        )}
-      </div>
-
       {/* Identidade */}
       <div style={s.card}>
         <div style={s.sectionTitle}>🏷️ Identidade do blog</div>

@@ -31,7 +31,6 @@
     "js-yaml": "^4.3.2",
     "marked": "^12.0.2",
     "next": "^15.5.28",
-    "pdf-parse": "^2.4.5",
     "react": "^18",
     "react-dom": "^18",
     "reading-time": "^1.5.0",

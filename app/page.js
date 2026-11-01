@@ -3,7 +3,6 @@ import PostCard from "../components/PostCard";
 import LatestCarousel from "../components/LatestCarousel";
 import CategoryCards from "../components/CategoryCards";
 import QuickStart from "../components/QuickStart";
-import MedicationSummary from "../components/MedicationSummary";
 import HeroSheet from "../components/HeroSheet";
 import { getAllPosts, getCategoryStats } from "../lib/posts";
 import config from "../site.config";
@@ -49,8 +48,6 @@ export default function HomePage() {
           <Link href="/aviso-de-saude">Leia o aviso de saúde</Link>
         </div>
       </section>
-
-      <MedicationSummary />
 
       {posts.length > 0 && (
         <section className="section section--alt">

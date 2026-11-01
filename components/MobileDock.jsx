@@ -23,6 +23,7 @@ function Icon({ name }) {
 const ITEMS = [
   { href: "/", label: "Início", icon: "home" },
   { href: "/blog", label: "Artigos", icon: "book" },
+  { href: "/consultar-cid", label: "CID", icon: "target" },
   { href: "/fontes-oficiais", label: "Fontes", icon: "folder" },
 ];
 
