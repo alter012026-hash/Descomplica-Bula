@@ -52,7 +52,7 @@ export default function BuscarMedicamentosPage() {
             <p className="section-label">Busca no catálogo</p>
             <h1 className="section-title">Consulte medicamentos</h1>
             <p className="hero-desc">
-              Pesquise por nome comercial ou princípio ativo e confira as apresentações cadastradas.
+              Digite o nome do medicamento para consultar as apresentações cadastradas.
             </p>
           </div>
         </header>
@@ -67,14 +67,14 @@ export default function BuscarMedicamentosPage() {
         </div>
 
         <form className="medication-search-form" onSubmit={pesquisar}>
-          <label htmlFor="medicine-search-name">Nome comercial ou princípio ativo</label>
+          <label htmlFor="medicine-search-name">Nome do medicamento</label>
           <div className="medication-search-controls">
             <input
               id="medicine-search-name"
               type="search"
               value={nome}
               onChange={(event) => setNome(event.target.value)}
-              placeholder="Ex.: dipirona"
+              placeholder="Digite o nome do medicamento"
               minLength={2}
               maxLength={100}
               autoComplete="off"
@@ -85,7 +85,7 @@ export default function BuscarMedicamentosPage() {
               {carregando ? "Buscando…" : "Pesquisar"}
             </button>
           </div>
-          <p>Até 10 resultados por busca. A API pode aplicar limites diários e mensais.</p>
+          <p>Busca somente por texto; não aceita fotos ou imagens. Até 10 resultados por busca.</p>
         </form>
 
         {erro && (
