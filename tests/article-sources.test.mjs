@@ -4,8 +4,10 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { fetchOfficialSource, fetchOfficialSources, extractReadableText } = require("../lib/official-source-fetcher.js");
+const { extractReadableText: extractArticleText } = require("../lib/article-extractor.js");
 const { inferCategory } = require("../lib/article-categories.cjs");
 const { isOfficialUrl } = require("../lib/source-validation.js");
+const { isMedicationNews } = require("../lib/news-scraper.js");
 const healthTopics = require("../lib/health-topics.js");
 const { buildPrompt } = require("../lib/article-generator.js");
 const categories = [
@@ -24,6 +26,30 @@ test("extração de página remove scripts e preserva texto útil", () => {
   );
   assert.ok(text.includes("Informação oficial"));
   assert.ok(!text.includes("não usar"));
+});
+
+test("extração de notícia descarta parágrafos de placeholder", () => {
+  const text = extractArticleText(
+    `<main><p>${"Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(2)}</p>` +
+    `<p>${"A Anvisa publicou informação oficial importante sobre medicamentos. ".repeat(2)}</p></main>`
+  );
+  assert.ok(text.includes("Anvisa publicou"));
+  assert.ok(!text.includes("Lorem ipsum"));
+});
+
+test("fila de notícias aceita apenas páginas oficiais e relacionadas a medicamentos", () => {
+  assert.equal(isMedicationNews({
+    title: "Anvisa publica alerta sobre medicamento",
+    link: "https://www.gov.br/anvisa/pt-br/assuntos/medicamentos/alerta",
+  }), true);
+  assert.equal(isMedicationNews({
+    title: "Prefeitura divulga programação cultural",
+    link: "https://www.gov.br/cultura/noticias/programacao",
+  }), false);
+  assert.equal(isMedicationNews({
+    title: "Anvisa publica alerta sobre medicamento",
+    link: "https://www.gov.br/",
+  }), false);
 });
 
 test("checagem aceita somente página oficial HTTPS com texto legível", async () => {

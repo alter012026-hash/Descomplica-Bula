@@ -168,12 +168,12 @@ const SEEDS = require("../lib/health-topics.js");
 // Só cai pro pool estático de SEEDS se a fila estiver vazia — é isso que dá
 // autenticidade: o artigo nasce de um comunicado oficial recente,
 // em vez de um tema evergreen genérico.
-function pickNewsTopic() {
+function pickNewsTopic(excludedLinks = new Set()) {
   const pending = loadJson(pendingNewsPath, []);
   if (!pending.length) return null;
 
   const usedLinks = new Set(loadJson(usedNewsLinksPath, []));
-  const available = pending.filter((item) => !usedLinks.has(item.link));
+  const available = pending.filter((item) => !usedLinks.has(item.link) && !excludedLinks.has(item.link));
   if (!available.length) return null;
 
   // Em vez de consumir 1 notícia = 1 artigo, agrupa notícias sobre o mesmo
@@ -189,15 +189,7 @@ function pickNewsTopic() {
   const consolidated = items.length >= 2;
   const topic = consolidated ? deriveClusterTopic(items) : items[0].title;
 
-  // Marca como consumidas imediatamente TODAS as notícias do cluster escolhido
-  // (remove da fila, registra os links como usados) — mesmo que a geração
-  // falhe depois, não reprocessamos as mesmas notícias toda hora.
   const selectedLinks = new Set(items.map((i) => i.link));
-  const remaining = pending.filter((p) => !selectedLinks.has(p.link));
-  saveJson(pendingNewsPath, remaining);
-
-  const allUsedLinks = new Set([...usedLinks, ...selectedLinks]);
-  saveJson(usedNewsLinksPath, [...allUsedLinks].slice(-500)); // teto pra não crescer infinito
 
   // A categoria é escolhida por palavras-chave simples no título consolidado
   // (ou no título da notícia, se for um item isolado); cai num fallback
@@ -217,10 +209,10 @@ function pickNewsTopic() {
     ? { title: topic, consolidated: true, items }
     : items[0];
 
-  return { topic, category, newsFact };
+  return { topic, category, newsFact, selectedNewsLinks: [...selectedLinks] };
 }
 
-function buildTopic() {
+function buildTopic(excludedNewsLinks) {
   if (topicArg) {
     if (categoryArg && !CATEGORIES.includes(categoryArg)) {
       throw new Error(`Categoria inválida: ${categoryArg}`);
@@ -239,7 +231,7 @@ function buildTopic() {
     throw new Error(`Categoria inválida: ${categoryArg}`);
   }
 
-  const newsTopic = categoryArg ? null : pickNewsTopic();
+  const newsTopic = categoryArg ? null : pickNewsTopic(excludedNewsLinks);
   if (newsTopic) return newsTopic;
 
   const usedTopics = loadJson(usedTopicsLogPath, []);
@@ -289,6 +281,16 @@ function buildTopic() {
   // marcado explicitamente para aparecer no painel de qualidade como "pool esgotado",
   // já que o tópico abaixo é necessariamente uma repetição de algo já publicado
   return { topic, category, seedPoolExhausted: true };
+}
+
+function markNewsLinksUsed(links) {
+  if (!Array.isArray(links) || links.length === 0) return;
+  const selectedLinks = new Set(links);
+  const pending = loadJson(pendingNewsPath, []);
+  const usedLinks = new Set(loadJson(usedNewsLinksPath, []));
+  for (const link of selectedLinks) usedLinks.add(link);
+  saveJson(pendingNewsPath, pending.filter((item) => !selectedLinks.has(item.link)));
+  saveJson(usedNewsLinksPath, [...usedLinks].slice(-500));
 }
 
 // ─── Save ─────────────────────────────────────────────────────────────
@@ -403,9 +405,18 @@ async function main() {
   }
 
   const count = countArg || 1;
+  let generatedCount = 0;
+  const attemptedNewsLinks = new Set();
 
   for (let i = 0; i < count; i++) {
-    const { topic, category, seedPoolExhausted, newsFact } = buildTopic();
+    const {
+      topic,
+      category,
+      seedPoolExhausted,
+      newsFact,
+      selectedNewsLinks = [],
+    } = buildTopic(attemptedNewsLinks);
+    for (const link of selectedNewsLinks) attemptedNewsLinks.add(link);
     const newsLabel = newsFact
       ? newsFact.consolidated
         ? `  📰 (consolidado de ${newsFact.items.length} notícias)`
@@ -422,10 +433,12 @@ async function main() {
         newsFact,
       });
       const file = await saveArticle(result, topic, category, null, seedPoolExhausted);
+      markNewsLinksUsed(selectedNewsLinks);
 
       const used = loadJson(usedTopicsLogPath, []);
       used.push(topic);
       saveJson(usedTopicsLogPath, used, 300);
+      generatedCount += 1;
 
       console.log(`📝 Enviado para revisão editorial: ${file} (${result.wordCount} palavras, via ${result.provider})`);
     } catch (err) {
@@ -440,6 +453,10 @@ async function main() {
     }
 
     if (i < count - 1) await sleep(2000);
+  }
+
+  if (generatedCount === 0) {
+    throw new Error("Nenhum rascunho passou pela validação; nenhuma pauta foi consumida.");
   }
 }
 

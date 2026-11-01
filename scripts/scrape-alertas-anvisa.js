@@ -15,7 +15,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { fetchAllHealthNews } = require("../lib/news-scraper.js");
+const { fetchAllHealthNews, isMedicationNews } = require("../lib/news-scraper.js");
 const { fetchArticleText } = require("../lib/article-extractor.js");
 
 const pendingPath = path.resolve(__dirname, "../.pending-news-topics.json");
@@ -56,7 +56,7 @@ async function main() {
   let added = 0;
   let fullTextFetches = 0;
   for (const item of news) {
-    if (usedLinks.has(item.link) || pendingLinks.has(item.link)) continue;
+    if (usedLinks.has(item.link) || pendingLinks.has(item.link) || !isMedicationNews(item)) continue;
 
     let fullText = "";
     if (fullTextFetches < MAX_FULLTEXT_FETCHES) {
