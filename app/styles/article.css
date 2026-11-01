@@ -247,7 +247,7 @@
   color: var(--text);
 }
 .prose pre { background: var(--ink); color: var(--on-ink); padding: 18px 20px; border-radius: var(--radius-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.75em 0; }
-[data-theme="dark"] .prose pre { background: #05071A; color: #EEF0FF; }
+[data-theme="dark"] .prose pre { background: #07131F; color: #EAF3F8; }
 .prose pre code { background: none; border: none; color: inherit; padding: 0; }
 .prose hr { border-top: 1.5px solid var(--border); margin: 2.4em 0; }
 

@@ -415,7 +415,7 @@
   height: 54px; padding: 0 20px;
   border-radius: var(--radius-full);
   border: 2px solid transparent;
-  background: #fff; color: #12163A;
+  background: #fff; color: #17324D;
   font-size: 1rem;
   outline: none;
 }
@@ -427,7 +427,7 @@
   font-weight: 800; font-size: 1rem;
   transition: transform var(--t-fast) var(--ease-out), background var(--t-fast);
 }
-.nl-inline-btn:hover { background: #FFE070; transform: translateY(-2px); }
+.nl-inline-btn:hover { background: #D9AA52; transform: translateY(-2px); }
 .nl-inline-btn:disabled { opacity: 0.6; cursor: wait; }
 .nl-inline-feedback { margin-top: 10px; font-weight: 600; font-size: 0.9rem; }
 .nl-inline-feedback--error { color: #FFC7BF; }

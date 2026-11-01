@@ -1,14 +1,14 @@
 /* ================================================================
    DESCOMPLICA BULA — Design system
    ----------------------------------------------------------------
-   Conceito: informação acessível, confiança e cuidado. Verde-bula como
-   cor principal, âmbar para atenção e formas suaves inspiradas em cápsulas.
+   Conceito: informação acessível, confiança e cuidado. Azul-petróleo e
+   verde hospitalar como base, com âmbar discreto para destaques.
 
    Paleta
-     Verde-bula   #176B4D   ação e identidade
-     Âmbar        #E8A72E   destaque e atenção
-     Tinta        #18352A   texto principal
-     Papel        #F7F9F4   fundo claro
+     Azul-petróleo #087F8C   ação e identidade
+     Âmbar         #C58A1B   destaque e atenção
+     Tinta         #17324D   texto principal
+     Papel         #F5F9FC   fundo claro
 
    Tipografia
      Bricolage Grotesque  títulos e interface (eixos de largura/óptico)
@@ -21,46 +21,46 @@
 
 :root {
   /* ---- marca ---- */
-  --ink:            #18352A;
-  --on-ink:         #F7F9F4;
-  --primary:        #176B4D;
-  --primary-light:  #2D8A66;
-  --primary-dark:   #10553B;
+  --ink:            #17324D;
+  --on-ink:         #F5F9FC;
+  --primary:        #087F8C;
+  --primary-light:  #1595A3;
+  --primary-dark:   #06636D;
   --on-primary:     #FFFFFF;
-  --link:           #176B4D;
-  --hl:             #E8A72E;
-  --hl-soft:        #FFF1D1;
-  --on-hl:          #18352A;
-  --accent:         #A75E12;
-  --accent-light:   #C9781C;
-  --accent-dark:    #804608;
-  --gold:           #B47716;
-  --success:        #176B4D;
-  --success-soft:   #E1F2E9;
-  --focus:          #176B4D;
+  --link:           #087685;
+  --hl:             #C58A1B;
+  --hl-soft:        #FBF2DD;
+  --on-hl:          #17324D;
+  --accent:         #A85D18;
+  --accent-light:   #C9782C;
+  --accent-dark:    #804513;
+  --gold:           #A87517;
+  --success:        #087F72;
+  --success-soft:   #E2F2EE;
+  --focus:          #087F8C;
 
   /* ---- superfícies ---- */
-  --bg:             #F7F9F4;
+  --bg:             #F5F9FC;
   --surface:        #FFFFFF;
-  --surface-2:      #EAF1E9;
-  --surface-3:      #DDE9DD;
-  --text:           #18352A;
-  --text-secondary: #40594B;
-  --text-muted:     #63796B;
-  --border:         #D2DED1;
-  --border-soft:    #E3EBE0;
-  --glass-border:   rgba(24, 53, 42, 0.10);
-  --header-bg:      rgba(247, 249, 244, 0.86);
-  --hero-bg:        #176B4D;
+  --surface-2:      #EAF3F7;
+  --surface-3:      #D8E8EF;
+  --text:           #17324D;
+  --text-secondary: #405A70;
+  --text-muted:     #5D7182;
+  --border:         #CEDDE6;
+  --border-soft:    #E3EDF2;
+  --glass-border:   rgba(23, 50, 77, 0.10);
+  --header-bg:      rgba(245, 249, 252, 0.88);
+  --hero-bg:        #075B66;
   --hero-fg:        #FFFFFF;
   --hero-ring:      #FFFFFF;
-  --footer-bg:      #18352A;
+  --footer-bg:      #102B43;
 
   /* ---- sombras (usadas com parcimônia: a estrutura vem de bordas) ---- */
-  --shadow-sm:      0 1px 2px rgba(24, 53, 42, 0.08);
-  --shadow-md:      0 10px 26px -10px rgba(24, 53, 42, 0.22);
-  --shadow-lg:      0 22px 44px -16px rgba(24, 53, 42, 0.30);
-  --shadow-xl:      0 34px 70px -20px rgba(24, 53, 42, 0.38);
+  --shadow-sm:      0 1px 2px rgba(23, 50, 77, 0.08);
+  --shadow-md:      0 10px 26px -10px rgba(23, 50, 77, 0.22);
+  --shadow-lg:      0 22px 44px -16px rgba(23, 50, 77, 0.30);
+  --shadow-xl:      0 34px 70px -20px rgba(23, 50, 77, 0.38);
 
   /* ---- tipografia (variáveis injetadas por next/font em layout.js) ---- */
   --font-display:   var(--f-display), "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
@@ -94,34 +94,36 @@
 }
 
 [data-theme="dark"] {
-  --ink:            #EAF3E9;
-  --on-ink:         #0B1913;
-  --primary:        #63B78D;
-  --primary-light:  #83D0A8;
-  --primary-dark:   #398A63;
-  --link:           #83D0A8;
-  --hl:             #E8A72E;
-  --hl-soft:        #493715;
-  --accent:         #F2B75C;
-  --accent-light:   #F6C779;
-  --accent-dark:    #D99432;
-  --success:        #63B78D;
-  --success-soft:   #173526;
-  --focus:          #E8A72E;
+  --ink:            #EAF3F8;
+  --on-ink:         #0B1724;
+  --primary:        #5BC0C8;
+  --primary-light:  #80D3D7;
+  --primary-dark:   #3295A0;
+  --on-primary:     #0B1724;
+  --link:           #80D3D7;
+  --hl:             #D9AA52;
+  --hl-soft:        #3D3421;
+  --on-hl:          #17324D;
+  --accent:         #F0B66A;
+  --accent-light:   #F5C98B;
+  --accent-dark:    #D89543;
+  --success:        #62C6B3;
+  --success-soft:   #173A3A;
+  --focus:          #D9AA52;
 
-  --bg:             #0B1913;
-  --surface:        #13251C;
-  --surface-2:      #1A3024;
-  --surface-3:      #23402F;
-  --text:           #EAF3E9;
-  --text-secondary: #C0D2C2;
-  --text-muted:     #93AA98;
-  --border:         #31523D;
-  --border-soft:    #263F30;
-  --glass-border:   rgba(234, 243, 233, 0.12);
-  --header-bg:      rgba(11, 25, 19, 0.84);
-  --hero-bg:        #123D2A;
-  --footer-bg:      #07120D;
+  --bg:             #0B1724;
+  --surface:        #122334;
+  --surface-2:      #1A3043;
+  --surface-3:      #254258;
+  --text:           #EAF3F8;
+  --text-secondary: #C1D2DF;
+  --text-muted:     #9CB2C1;
+  --border:         #345267;
+  --border-soft:    #263F52;
+  --glass-border:   rgba(234, 243, 248, 0.12);
+  --header-bg:      rgba(11, 23, 36, 0.86);
+  --hero-bg:        #0D4A55;
+  --footer-bg:      #07131F;
 
   --shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md:      0 10px 26px -10px rgba(0, 0, 0, 0.6);
@@ -134,18 +136,18 @@
 
 /* ── Cor por categoria: tudo derivado de --h (matiz) ───────────── */
 .cat {
-  --cat:       hsl(var(--h, 222) 85% 48%);
-  --cat-text:  hsl(var(--h, 222) 75% 27%);
-  --cat-soft:  hsl(var(--h, 222) 100% 95%);
-  --cat-mid:   hsl(var(--h, 222) 95% 88%);
-  --cat-deep:  hsl(var(--h, 222) 70% 20%);
+  --cat:       hsl(var(--h, 195) 58% 44%);
+  --cat-text:  hsl(var(--h, 195) 65% 27%);
+  --cat-soft:  hsl(var(--h, 195) 52% 96%);
+  --cat-mid:   hsl(var(--h, 195) 48% 89%);
+  --cat-deep:  hsl(var(--h, 195) 55% 20%);
 }
 [data-theme="dark"] .cat {
-  --cat:       hsl(var(--h, 222) 90% 66%);
-  --cat-text:  hsl(var(--h, 222) 95% 80%);
-  --cat-soft:  hsl(var(--h, 222) 45% 15%);
-  --cat-mid:   hsl(var(--h, 222) 45% 24%);
-  --cat-deep:  hsl(var(--h, 222) 60% 14%);
+  --cat:       hsl(var(--h, 195) 64% 62%);
+  --cat-text:  hsl(var(--h, 195) 58% 80%);
+  --cat-soft:  hsl(var(--h, 195) 38% 15%);
+  --cat-mid:   hsl(var(--h, 195) 40% 24%);
+  --cat-deep:  hsl(var(--h, 195) 52% 14%);
 }
 
 /* ── Reset e base ──────────────────────────────────────────────── */
@@ -237,7 +239,7 @@ time, .tabular, .post-card-date, .post-card-reading, .article-meta-item {
 .btn:active, .hero-cta:active { transform: translateY(0) scale(0.98); box-shadow: none; }
 
 .btn--hl { background: var(--hl); color: var(--on-hl); }
-.btn--hl:hover { background: #FFE070; }
+.btn--hl:hover { background: #D9AA52; }
 .btn--ghost { background: transparent; color: inherit; border-color: currentColor; }
 .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); }
 .btn--outline { background: transparent; color: var(--text); border-color: var(--border); }

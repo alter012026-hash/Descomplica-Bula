@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 
 const colors = {
-  background: "#F4F6FF",
-  border: "#D3D9F4",
+  background: "#F5F9FC",
+  border: "#CEDDE6",
   surface: "#FFFFFF",
-  text: "#12163A",
-  muted: "#454B73",
-  primary: "#2430E6",
+  text: "#17324D",
+  muted: "#405A70",
+  primary: "#087F8C",
   green: "#0B7A47",
   red: "#C93525",
 };

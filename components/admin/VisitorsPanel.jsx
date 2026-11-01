@@ -50,7 +50,7 @@ const EXTRA_CSS = `
 .tv-tl small{display:block;color:var(--c-faint);font-size:11.5px}
 .tv-more{display:flex;justify-content:center;margin-top:14px}
 .tv-btn-light{border:1px solid var(--c-line);background:var(--c-soft);color:var(--c-text);border-radius:11px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer}
-.tv-btn-light:hover{background:#E9EDFF}
+.tv-btn-light:hover{background:#EAF3F7}
 .tv-btn-light:disabled{opacity:.6;cursor:default}
 `;
 
@@ -123,14 +123,14 @@ function StackedColumns({ points }) {
           <div key={p.date} onMouseEnter={() => setHov(i)} onClick={() => setHov(i)}
             style={{ flex: 1, height: "100%", display: "flex", alignItems: "flex-end", cursor: "pointer", minWidth: 0 }}>
             {p.sessions === 0 ? (
-              <div style={{ width: "100%", height: 2, background: "#E3E7FA" }} />
+              <div style={{ width: "100%", height: 2, background: "#D4E1E9" }} />
             ) : (
               <div style={{
                 width: "100%", height: `${Math.max(4, (p.sessions / max) * 100)}%`, display: "flex", flexDirection: "column",
                 borderRadius: "5px 5px 2px 2px", overflow: "hidden", opacity: hov === null || hov === i ? 1 : 0.55, transition: "opacity .12s",
               }}>
-                <div style={{ flex: p.returningSessions, background: "#7C3AED" }} />
-                <div style={{ flex: p.newSessions, background: "#2430E6" }} />
+                <div style={{ flex: p.returningSessions, background: "#3D8292" }} />
+                <div style={{ flex: p.newSessions, background: "#087F8C" }} />
               </div>
             )}
           </div>
@@ -138,7 +138,7 @@ function StackedColumns({ points }) {
       </div>
       <div style={{ display: "flex", gap: points.length > 40 ? 1 : 3, paddingTop: 6 }} aria-hidden="true">
         {points.map((p, i) => (
-          <div key={p.date} style={{ flex: 1, minWidth: 0, fontSize: 10.5, color: "#6A6F99", textAlign: "center", whiteSpace: "nowrap", overflow: "visible" }}>
+          <div key={p.date} style={{ flex: 1, minWidth: 0, fontSize: 10.5, color: "#5D7182", textAlign: "center", whiteSpace: "nowrap", overflow: "visible" }}>
             {i % every === 0 ? shortDay(p.date) : ""}
           </div>
         ))}
@@ -149,8 +149,8 @@ function StackedColumns({ points }) {
           : "Passe o mouse (ou toque) para ver os números."}
       </p>
       <div className="tp-leg" style={{ gap: 14, marginTop: 4 }}>
-        <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><i className="tp-sw" style={{ background: "#2430E6" }} />Novos</span>
-        <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><i className="tp-sw" style={{ background: "#7C3AED" }} />Voltaram</span>
+        <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><i className="tp-sw" style={{ background: "#087F8C" }} />Novos</span>
+        <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><i className="tp-sw" style={{ background: "#3D8292" }} />Voltaram</span>
       </div>
     </div>
   );
@@ -177,7 +177,7 @@ function SessionDetail({ detail, titles, onPick, onClose }) {
         <span className="tv-chip">Ações: <b>{s.events}</b></span>
       </div>
 
-      <h4 style={{ margin: "0 0 6px", fontSize: 13, color: "#454B73" }}>O que a pessoa fez, em ordem</h4>
+      <h4 style={{ margin: "0 0 6px", fontSize: 13, color: "#405A70" }}>O que a pessoa fez, em ordem</h4>
       {timeline.length === 0 ? (
         <div className="tp-empty">Sem passos registrados.</div>
       ) : (
@@ -199,7 +199,7 @@ function SessionDetail({ detail, titles, onPick, onClose }) {
 
       {others.length > 0 && (
         <>
-          <h4 style={{ margin: "20px 0 8px", fontSize: 13, color: "#454B73" }}>Outras visitas deste mesmo visitante</h4>
+          <h4 style={{ margin: "20px 0 8px", fontSize: 13, color: "#405A70" }}>Outras visitas deste mesmo visitante</h4>
           <div className="tp-scroll">
             <table className="tp-table">
               <thead><tr><th>Quando</th><th>Começou em</th><th className="r">Páginas</th><th className="r">Tempo</th></tr></thead>
@@ -347,13 +347,13 @@ export default function VisitorsPanel() {
       {error && <div role="alert" className="tp-card tp-err">{error}</div>}
 
       <div className="tp-kpis" style={{ opacity: loading && !data ? 0.5 : 1 }}>
-        <Kpi label="Visitas" icon="zap" color="#2430E6" value={totals ? nf.format(totals.sessions) : "—"} sub={`em ${rangeLabel}`} spark={spark("sessions")} />
-        <Kpi label="Visitantes" icon="users" color="#7C3AED" value={totals ? nf.format(totals.visitors) : "—"} sub="únicos por dia, somados" spark={spark("visitors")} />
-        <Kpi label="Voltaram ao site" icon="eye" color="#0EA5E9" value={totals?.returningRate != null ? `${totals.returningRate}%` : "—"} sub="das visitas são de recorrentes" />
-        <Kpi label="Páginas por visita" icon="layers" color="#10B981" value={totals?.pagesPerSession ?? "—"} sub="quanto mais, melhor" />
-        <Kpi label="Tempo por visita" icon="clock" color="#F59E0B" value={totals ? fmtDur(totals.avgSeconds) : "—"} sub="leitura ativa" />
-        <Kpi label="Ações no site" icon="mouse" color="#EC4899" value={totals ? nf.format(totals.actions) : "—"} sub="cliques e inscrições" />
-        <Kpi label="Cobertura" icon="calendar" color="#64748B" value={totals?.coverage != null ? `${totals.coverage}%` : "—"} sub="das visitas aceitaram cookies" />
+        <Kpi label="Visitas" icon="zap" color="#087F8C" value={totals ? nf.format(totals.sessions) : "—"} sub={`em ${rangeLabel}`} spark={spark("sessions")} />
+        <Kpi label="Visitantes" icon="users" color="#3D8292" value={totals ? nf.format(totals.visitors) : "—"} sub="únicos por dia, somados" spark={spark("visitors")} />
+        <Kpi label="Voltaram ao site" icon="eye" color="#3C91A6" value={totals?.returningRate != null ? `${totals.returningRate}%` : "—"} sub="das visitas são de recorrentes" />
+        <Kpi label="Páginas por visita" icon="layers" color="#2A8C78" value={totals?.pagesPerSession ?? "—"} sub="quanto mais, melhor" />
+        <Kpi label="Tempo por visita" icon="clock" color="#C28A2C" value={totals ? fmtDur(totals.avgSeconds) : "—"} sub="leitura ativa" />
+        <Kpi label="Ações no site" icon="mouse" color="#A76A73" value={totals ? nf.format(totals.actions) : "—"} sub="cliques e inscrições" />
+        <Kpi label="Cobertura" icon="calendar" color="#60788A" value={totals?.coverage != null ? `${totals.coverage}%` : "—"} sub="das visitas aceitaram cookies" />
       </div>
 
       {insights.length > 0 && (
@@ -390,11 +390,11 @@ export default function VisitorsPanel() {
                   { label: "Primeira visita", views: totals.newSessions },
                   { label: "Já tinham visitado", views: totals.returningSessions },
                 ]}
-                colorOf={(_l, i) => (i === 0 ? "#2430E6" : "#7C3AED")}
+                colorOf={(_l, i) => (i === 0 ? "#087F8C" : "#3D8292")}
                 centerValue={totals.returningRate != null ? `${totals.returningRate}%` : "—"}
                 centerLabel="voltaram"
               />
-              <h4 style={{ margin: "20px 0 12px", fontSize: 13, color: "#454B73" }}>Em qual visita estão</h4>
+              <h4 style={{ margin: "20px 0 12px", fontSize: 13, color: "#405A70" }}>Em qual visita estão</h4>
               <BarsH items={asViews(data.visitNumber)} total={totals.sessions} labelOf={(i) => i.label} />
             </Card>
           </div>
@@ -419,7 +419,7 @@ export default function VisitorsPanel() {
               </div>
               {ev("newsletter_signup_success").pages.length > 0 && (
                 <>
-                  <h4 style={{ margin: "18px 0 12px", fontSize: 13, color: "#454B73" }}>Onde as pessoas se inscrevem</h4>
+                  <h4 style={{ margin: "18px 0 12px", fontSize: 13, color: "#405A70" }}>Onde as pessoas se inscrevem</h4>
                   <BarsH items={ev("newsletter_signup_success").pages.map((p) => ({ ...p, label: p.title, views: p.count }))}
                     total={ev("newsletter_signup_success").count} labelOf={(i) => i.label} subOf={(i) => i.path} />
                 </>
@@ -438,7 +438,7 @@ export default function VisitorsPanel() {
               <BarsH items={asViews(ev("affiliate_click").dims, "label")} total={ev("affiliate_click").count} labelOf={(i) => i.label} />
               {ev("affiliate_click").pages.length > 0 && (
                 <>
-                  <h4 style={{ margin: "18px 0 12px", fontSize: 13, color: "#454B73" }}>Páginas que mais geram cliques</h4>
+                  <h4 style={{ margin: "18px 0 12px", fontSize: 13, color: "#405A70" }}>Páginas que mais geram cliques</h4>
                   <BarsH items={ev("affiliate_click").pages.map((p) => ({ ...p, label: p.title, views: p.count }))}
                     total={ev("affiliate_click").count} labelOf={(i) => i.label} subOf={(i) => i.path} />
                 </>

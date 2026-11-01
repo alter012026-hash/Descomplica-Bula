@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import siteConfig from "../../site.config";
 
 const colors = {
-  background: "#F7F9F4",
-  border: "#DCE6DC",
+  background: "#F5F9FC",
+  border: "#CEDDE6",
   surface: "#FFFFFF",
-  text: "#173626",
-  muted: "#52685A",
-  primary: "#236B45",
-  green: "#236B45",
+  text: "#17324D",
+  muted: "#405A70",
+  primary: "#087F8C",
+  green: "#087F72",
   red: "#C93525",
 };
 
