@@ -14,24 +14,30 @@ const SECTIONS = [
 export default function MedicationSummary() {
   const [medicineName, setMedicineName] = useState("");
   const [strength, setStrength] = useState("");
-  const [image, setImage] = useState(null);
+  const [leafletPdf, setLeafletPdf] = useState(null);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
   const [summary, setSummary] = useState(null);
-  const [officialLeafletUrl, setOfficialLeafletUrl] = useState("");
+  const officialLeafletUrl = "https://consultas.anvisa.gov.br/#/bulario/";
 
-  function handleImageChange(event) {
+  function handlePdfChange(event) {
     const selected = event.target.files?.[0] || null;
     setError("");
     setSummary(null);
 
-    if (selected && selected.size > 3 * 1024 * 1024) {
-      setImage(null);
+    if (selected && selected.size > 4 * 1024 * 1024) {
+      setLeafletPdf(null);
       event.target.value = "";
-      setError("A imagem deve ter no máximo 3 MB.");
+      setError("O PDF deve ter no máximo 4 MB.");
       return;
     }
-    setImage(selected);
+    if (selected && selected.type && selected.type !== "application/pdf") {
+      setLeafletPdf(null);
+      event.target.value = "";
+      setError("Selecione a bula em formato PDF.");
+      return;
+    }
+    setLeafletPdf(selected);
   }
 
   async function handleSubmit(event) {
@@ -40,13 +46,12 @@ export default function MedicationSummary() {
     setStatus("loading");
     setError("");
     setSummary(null);
-    setOfficialLeafletUrl("");
 
     try {
       const form = new FormData();
       form.set("medicineName", medicineName.trim());
       form.set("strength", strength.trim());
-      if (image) form.set("image", image);
+      if (leafletPdf) form.set("leafletPdf", leafletPdf);
 
       const response = await fetch("/api/medication-summary", {
         method: "POST",
@@ -55,7 +60,6 @@ export default function MedicationSummary() {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         setError(data.error || "Não foi possível gerar o resumo.");
-        setOfficialLeafletUrl(data.officialLeafletUrl || "");
         return;
       }
       if (data.urgent) {
@@ -85,10 +89,13 @@ export default function MedicationSummary() {
           <input
             type="text"
             value={medicineName}
-            onChange={(event) => setMedicineName(event.target.value)}
+            onChange={(event) => {
+              setMedicineName(event.target.value);
+              setSummary(null);
+            }}
             placeholder="Ex.: nome que aparece na caixa"
             maxLength={120}
-            required={!image}
+            required
             disabled={status === "loading"}
             autoComplete="off"
           />
@@ -107,61 +114,53 @@ export default function MedicationSummary() {
           />
         </label>
 
+        <p className="med-summary-upload-help">
+          1. <a href={officialLeafletUrl} target="_blank" rel="noopener noreferrer">Busque e baixe a bula do paciente no Bulário Eletrônico da Anvisa</a>.
+          Confira se o medicamento e a apresentação correspondem à embalagem.
+        </p>
+
         <label className="med-summary-upload">
-          <span className="med-summary-upload-title">Ou envie uma foto da embalagem</span>
-          <span className="med-summary-upload-help">Prefira uma imagem nítida, sem pessoas ou dados pessoais (JPG, PNG ou WebP; até 3 MB).</span>
+          <span className="med-summary-upload-title">2. Envie o PDF da bula</span>
+          <span className="med-summary-upload-help">PDF com texto selecionável, até 4 MB. PDFs digitalizados como imagem podem não ser legíveis.</span>
           <input
             type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={handleImageChange}
+            accept="application/pdf,.pdf"
+            onChange={handlePdfChange}
+            required
             disabled={status === "loading"}
           />
-          {image && <span className="med-summary-file">{image.name}</span>}
+          {leafletPdf && <span className="med-summary-file">{leafletPdf.name}</span>}
         </label>
 
         <button
           type="submit"
           className="btn btn--hl med-summary-submit"
-          disabled={status === "loading" || (!medicineName.trim() && !image)}
+          disabled={status === "loading" || !medicineName.trim() || !leafletPdf}
         >
           {status === "loading" ? "Preparando resumo…" : "Entender este medicamento"}
         </button>
       </form>
 
       <p className="med-summary-disclaimer">
-        O resumo usa o texto da bula do paciente localizado na consulta oficial da Anvisa. Se a bula
-        não puder ser confirmada ou lida, o resumo não é gerado. Não fornece doses nem orientação de uso.
-        Confira a bula completa e converse com um profissional de saúde.
+        O site confere se o nome informado aparece no texto do PDF, mas não consegue confirmar a autenticidade
+        nem se aquela é a versão vigente. Não fornece doses nem orientação de uso. Confira a bula completa no
+        Bulário da Anvisa e converse com um profissional de saúde.
       </p>
       <p className="med-summary-privacy">
-        Se você enviar apenas uma foto, ela será processada por um serviço de IA somente para ler o nome
-        do medicamento. A imagem não é salva pelo site.
+        O PDF é processado para extrair o texto e não é armazenado pelo site. O texto extraído é enviado ao
+        provedor de IA configurado para gerar o resumo.
       </p>
 
       {error && <p className="med-summary-error" role="alert">{error}</p>}
-      {officialLeafletUrl && (
-        <p>
-          <a
-            className="med-summary-source"
-            href={officialLeafletUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Abrir o Bulário Eletrônico da Anvisa
-          </a>
-        </p>
-      )}
 
       {summary && (
         <div className="med-summary-result" aria-live="polite">
           <div className="med-summary-identity">
             <h3>{summary.medicineName}</h3>
             {summary.activeIngredient && <p>Princípio ativo: {summary.activeIngredient}</p>}
-            {summary.officialSource?.manufacturer && <p>Fabricante: {summary.officialSource.manufacturer}</p>}
-            {summary.officialSource?.accessedAt && (
+            {summary.uploadedSource?.uploadedAt && (
               <p>
-                Bula do paciente consultada na Anvisa em{" "}
-                {new Date(summary.officialSource.accessedAt).toLocaleDateString("pt-BR")}.
+                Resumo baseado no arquivo enviado. Autenticidade e vigência não verificadas.
               </p>
             )}
           </div>
@@ -179,7 +178,7 @@ export default function MedicationSummary() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Conferir bula na consulta oficial da Anvisa
+            Conferir novamente no Bulário Eletrônico da Anvisa
           </a>
         </div>
       )}
