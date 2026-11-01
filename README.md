@@ -35,6 +35,7 @@ Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, 
 
 - Configure os dados do site em `site.config.js`, incluindo domínio, e-mail, categorias e fontes oficiais.
 - A geração de artigos depende de uma chave de provedor de IA e das variáveis de ambiente documentadas em `.env.example`.
+- Ao iniciar manualmente o workflow de artigos com um tema próprio, a categoria é inferida quando possível; se o tema for ambíguo, informe o nome exato da categoria no campo opcional **Categoria**.
 - A geração valida a categoria do tema, acessa até três URLs oficiais e fornece o texto extraído como contexto; se nenhuma fonte legível puder ser checada, a geração não é aprovada. Isso não comprova automaticamente cada afirmação: a revisão humana continua obrigatória.
 - No admin, use **Artigos → Posts publicados → Atualizar com fontes oficiais** para propor uma revisão. Informe páginas da Anvisa ou de outros domínios permitidos; a proposta fica na fila editorial, mantém a versão publicada intacta e tem as fontes acessadas novamente antes da aprovação.
 - Artigos gerados e enviados manualmente passam por verificações automáticas e devem ser aprovados por uma pessoa antes da publicação.

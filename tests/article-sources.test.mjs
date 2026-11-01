@@ -86,6 +86,10 @@ test("categoria inferida para tema de bula é consistente com a configuração",
   assert.equal(inferred, "Entenda a bula");
 });
 
+test("categoria inferida para o tema manual 'Como ler uma bula'", () => {
+  assert.equal(inferCategory("Como ler uma bula", healthTopics, categories), "Entenda a bula");
+});
+
 test("tema genérico não recebe uma categoria arbitrária", () => {
   assert.equal(
     inferCategory("medicamentos", healthTopics, categories),

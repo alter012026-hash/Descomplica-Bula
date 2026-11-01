@@ -14,6 +14,11 @@ on:
         description: "Número de artigos"
         required: false
         default: "1"
+      category:
+        description: "Categoria exata (opcional; use uma das 10 categorias do site)"
+        required: false
+        type: string
+        default: ""
 
 # 🔒 EVITA EXECUÇÕES DUPLICADAS
 concurrency:
@@ -66,24 +71,25 @@ jobs:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ARTICLE_TOPIC: ${{ github.event.inputs.topic }}
+          ARTICLE_CATEGORY: ${{ github.event.inputs.category }}
+          ARTICLE_COUNT: ${{ github.event.inputs.count }}
         run: |
           set -e
 
-          TOPIC="${{ github.event.inputs.topic }}"
-          COUNT="${{ github.event.inputs.count }}"
-
-          if [ -z "$COUNT" ]; then
-            COUNT=1
-          fi
+          COUNT="${ARTICLE_COUNT:-1}"
 
           echo "🚀 Gerando $COUNT artigo(s)"
           echo "🕒 Execução local: $(date)"
 
-          if [ -n "$TOPIC" ]; then
-            node scripts/generate-article.js --topic "$TOPIC" --count "$COUNT"
-          else
-            node scripts/generate-article.js --count "$COUNT"
+          ARGS=(--count "$COUNT")
+          if [ -n "$ARTICLE_TOPIC" ]; then
+            ARGS+=(--topic "$ARTICLE_TOPIC")
           fi
+          if [ -n "$ARTICLE_CATEGORY" ]; then
+            ARGS+=(--category "$ARTICLE_CATEGORY")
+          fi
+          node scripts/generate-article.js "${ARGS[@]}"
 
       - name: Check changes
         id: changes
