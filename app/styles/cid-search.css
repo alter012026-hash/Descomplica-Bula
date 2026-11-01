@@ -1,0 +1,11 @@
+.cid-search-page { max-width: 760px; }
+.cid-search-select {
+  min-height: 46px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.cid-search-meta { color: var(--text-muted); font-size: 0.82rem; }

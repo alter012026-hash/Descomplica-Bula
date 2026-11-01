@@ -24,6 +24,12 @@ export default function sitemap() {
       priority: 0.9,
     },
     {
+      url: `${siteUrl}/consultar-cid`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${siteUrl}/sobre`,
       lastModified: new Date(),
       changeFrequency: "monthly",

@@ -71,6 +71,7 @@ const siteConfig = {
   },
   navigation: [
     { label: "Buscar medicamentos", href: "/buscar-medicamentos" },
+    { label: "Consultar CID", href: "/consultar-cid" },
     { label: "Medicamentos", href: "/blog?categoria=Entenda%20a%20bula" },
     { label: "Uso seguro", href: "/blog?categoria=Uso%20seguro" },
     { label: "Efeitos e reações", href: "/blog?categoria=Efeitos%20e%20reações" },

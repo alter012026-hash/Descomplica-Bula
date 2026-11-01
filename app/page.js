@@ -28,6 +28,7 @@ export default function HomePage() {
             </p>
             <div className="hero-actions">
               <Link href="/buscar-medicamentos" className="btn btn--hl">Buscar medicamento</Link>
+              <Link href="/consultar-cid" className="btn btn--ghost">Consultar CID</Link>
               <Link href="/blog" className="btn btn--hl">Explorar conteúdos</Link>
               <Link href="/fontes-oficiais" className="btn btn--ghost">Consultar fontes oficiais</Link>
             </div>
