@@ -14,6 +14,21 @@ npm run dev
 
 Abra `http://localhost:3000`. Para acessar `/admin`, defina `ADMIN_PASSWORD` em `.env.local`. Chaves de IA, newsletter, GitHub e Redis são opcionais para executar o site; configure somente os serviços que utilizar.
 
+## Automações em produção
+
+O deploy de produção já é feito pela integração nativa Vercel-GitHub a cada push na branch `main`; não precisa de `VERCEL_DEPLOY_HOOK`. Os workflows agendados rodam no GitHub Actions, então cadastre os valores em **Settings → Secrets and variables → Actions** no repositório, e não em arquivos do Git.
+
+| Automação | Variáveis na Vercel | GitHub Actions secrets | Observações |
+| --- | --- | --- | --- |
+| Admin (`/admin`) | `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | — | Defina uma senha forte e gere um segredo aleatório. |
+| Rascunhos diários com IA | Uma chave: `GROK_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` ou `GEMINI_API_KEY` | A mesma chave, com o mesmo nome | O workflow gera rascunhos para revisão; não publica artigos automaticamente. |
+| Newsletter diária | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEWSLETTER_CRON_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `NEWSLETTER_CRON_SECRET`, `SITE_URL` | Use o mesmo segredo cron nos dois painéis, um remetente verificado no Resend e um token GitHub com acesso de leitura e escrita ao repositório. O `SITE_URL` deve ser a URL pública implantada. |
+| Métricas persistentes | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash. |
+
+`GITHUB_TOKEN` e `GITHUB_REPO` na Vercel são necessários para ações do painel administrativo que escrevem no GitHub e para a newsletter atualizar seu estado de envio. O token deve ter permissão de conteúdo de leitura e escrita no repositório. O workflow de geração usa o `GITHUB_TOKEN` automático do Actions, com permissão de escrita no repositório. `VERCEL_DEPLOY_HOOK` é opcional para acionamentos extras e não é necessário para o deploy normal.
+
+Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, por exemplo no PowerShell: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Cadastre os segredos diretamente nos painéis Vercel/GitHub; não os envie por chat nem os salve no repositório. Após alterar variáveis da Vercel, faça um novo deploy para aplicá-las.
+
 ## Conteúdo e segurança editorial
 
 - Configure os dados do site em `site.config.js`, incluindo domínio, e-mail, categorias e fontes oficiais.
