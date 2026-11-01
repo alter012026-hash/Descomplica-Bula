@@ -12,7 +12,7 @@
       "https://consultas.anvisa.gov.br/#/bulario/"
     ],
     "validationIssues": [],
-    "status": "NEEDS_REVIEW",
+    "status": "PUBLISHED",
     "generatedAt": "2026-11-01T02:56:35.355Z",
     "history": [
       {
@@ -22,7 +22,18 @@
       {
         "status": "NEEDS_REVIEW",
         "at": "2026-11-01T02:56:35.355Z"
+      },
+      {
+        "status": "APPROVED",
+        "at": "2026-11-01T02:58:09.596Z"
+      },
+      {
+        "status": "PUBLISHED",
+        "at": "2026-11-01T02:58:09.690Z"
       }
-    ]
+    ],
+    "coverImage": "",
+    "publishedAt": "2026-11-01T02:58:09.690Z",
+    "reviewedAt": "2026-11-01T02:58:09.596Z"
   }
 ]
