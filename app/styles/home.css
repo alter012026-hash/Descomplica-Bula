@@ -57,7 +57,7 @@
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.86);
 }
-.section .hero-desc { color: var(--text-muted); }
+.section .hero-desc { color: var(--text); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .hero-actions .btn { min-height: 52px; font-size: 1.02rem; }
 .hero-actions .btn--ghost { color: #fff; }
