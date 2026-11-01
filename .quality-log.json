@@ -20,5 +20,16 @@
     "status": "erro",
     "issues": [],
     "error": "Todos os provedores falharam — Cerebras: CEREBRAS_API_KEY ausente | Grok: GROK_API_KEY ausente | Groq: Groq(llama-3.3-70b-versatile) HTTP 404 | OpenRouter: OPENROUTER_API_KEY ausente | Gemini: GEMINI_API_KEY ausente"
+  },
+  {
+    "timestamp": "2026-11-01T14:26:54.378Z",
+    "topic": "HRC reforça cuidado integral ao paciente com AVC - Governo do Estado do Ceará",
+    "category": "Alertas da Anvisa",
+    "status": "VALIDATION_FAILED",
+    "issues": [
+      "falta ao menos um link HTTPS para uma fonte oficial permitida",
+      "não há links oficiais para checagem direta"
+    ],
+    "error": "VALIDATION_FAILED: falta ao menos um link HTTPS para uma fonte oficial permitida; não há links oficiais para checagem direta"
   }
 ]
