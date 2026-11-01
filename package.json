@@ -1,0 +1,56 @@
+{
+  "name": "descomplica-bula",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node --test",
+    "audit:duplicates": "node scripts/detect-topic-overlap.js",
+    "verify:seo": "node scripts/verify-seo.js",
+    "generate-article": "node scripts/generate-article.js",
+    "backfill-curiosity": "node scripts/backfill-curiosity.js",
+    "audit:seo": "node scripts/audit-seo.js",
+    "check:redis": "node scripts/check-redis.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-link": "^3.32.0",
+    "@tiptap/extension-placeholder": "^3.32.0",
+    "@tiptap/extension-text-align": "^3.32.0",
+    "@tiptap/extension-underline": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@vercel/analytics": "^1.3.1",
+    "@vercel/og": "^1.0.1",
+    "dotenv": "^17.4.2",
+    "groq-sdk": "^1.2.1",
+    "js-yaml": "^4.3.2",
+    "marked": "^12.0.2",
+    "next": "^15.5.28",
+    "react": "^18",
+    "react-dom": "^18",
+    "reading-time": "^1.5.0",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-html": "^16.0.1",
+    "sharp": "^0.35.5",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.35",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "8.5.30",
+    "glob": "10.5.0"
+  }
+}

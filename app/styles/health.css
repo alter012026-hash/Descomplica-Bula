@@ -1,0 +1,36 @@
+.health-notice,
+.health-article-warning {
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  padding: 18px 20px;
+  line-height: 1.65;
+}
+
+.health-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.health-notice a,
+.health-article-warning a {
+  color: var(--link);
+  font-weight: 700;
+}
+
+.health-article-warning {
+  margin: 24px 0;
+}
+
+.health-article-warning h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.health-article-warning p:last-child {
+  margin-bottom: 0;
+}

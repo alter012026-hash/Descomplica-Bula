@@ -1,0 +1,166 @@
+name: Gerar e Publicar Artigos
+
+on:
+  schedule:
+  - cron: "0 11 * * *"   # 08:00 horário de Brasília (1 post por dia)
+
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Tópico específico (opcional)"
+        required: false
+        default: ""
+      count:
+        description: "Número de artigos"
+        required: false
+        default: "1"
+
+# 🔒 EVITA EXECUÇÕES DUPLICADAS
+concurrency:
+  group: article-generator
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    env:
+      TZ: America/Sao_Paulo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.GROK_API_KEY }}" ] && \
+             [ -z "${{ secrets.GROQ_API_KEY }}" ] && \
+             [ -z "${{ secrets.CEREBRAS_API_KEY }}" ] && \
+             [ -z "${{ secrets.OPENROUTER_API_KEY }}" ] && \
+             [ -z "${{ secrets.GEMINI_API_KEY }}" ]; then
+            echo "Configure at least one supported article-generation provider secret."
+            exit 1
+          fi
+
+      - name: Buscar alertas oficiais de medicamentos
+        run: node scripts/scrape-alertas-anvisa.js
+
+      - name: Generate articles
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -e
+
+          TOPIC="${{ github.event.inputs.topic }}"
+          COUNT="${{ github.event.inputs.count }}"
+
+          if [ -z "$COUNT" ]; then
+            COUNT=1
+          fi
+
+          echo "🚀 Gerando $COUNT artigo(s)"
+          echo "🕒 Execução local: $(date)"
+
+          if [ -n "$TOPIC" ]; then
+            node scripts/generate-article.js --topic "$TOPIC" --count "$COUNT"
+          else
+            node scripts/generate-article.js --count "$COUNT"
+          fi
+
+      - name: Check changes
+        id: changes
+        run: |
+          # Artigos gerados ficam em NEEDS_REVIEW; este workflow não publica
+          # diretamente em posts/. O admin promove um rascunho após revisão.
+          # IMPORTANTE: .used-topics.json, .content-signatures.json e
+          # .quality-log.json também precisam ser commitados — são a
+          # "memória" que impede o pipeline de gerar posts quase-duplicados.
+          # Antes só posts/ e public/images/ eram commitados, então esses
+          # arquivos eram recriados vazios a cada execução do Actions e a
+          # checagem de duplicidade nunca enxergava o histórico real.
+          git add .editorial-drafts.json public/images/ .used-topics.json .content-signatures.json .quality-log.json .pending-news-topics.json .used-news-links.json
+
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Nenhum artigo novo gerado"
+            exit 0
+          fi
+
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          echo "new_files<<EOF" >> $GITHUB_OUTPUT
+          git diff --cached --name-only | head -10 >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Commit & push
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "ArticleBot"
+          git config user.email "bot@github.com"
+
+          DATE=$(date "+%Y-%m-%d %H:%M:%S %Z")
+
+          git commit -m "✍️ Artigos automáticos — $DATE"
+
+          for i in 1 2 3 4 5; do
+            if git push; then
+              echo "Push ok (tentativa $i)"
+              break
+            fi
+
+            if [ "$i" -eq 5 ]; then
+              echo "Push falhou apos 5 tentativas - abortando sem sobrescrever nada."
+              exit 1
+            fi
+
+            echo "Push rejeitado (tentativa $i), sincronizando com origin/main..."
+            git fetch origin main
+
+            if ! git rebase origin/main; then
+              echo "Conflito no rebase — verificando se é só nos arquivos de estado (auto-resolvível)..."
+
+              if node scripts/resolve-state-conflicts.js; then
+                echo "Conflito resolvido automaticamente — continuando o rebase."
+                GIT_EDITOR=true git rebase --continue
+              else
+                echo "Conflito real de conteúdo (não é só arquivo de estado). Abortando sem forçar."
+                git rebase --abort
+                exit 1
+              fi
+            fi
+
+            sleep 5
+          done
+
+      - name: Deploy Vercel
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
+            curl -s -X POST "$VERCEL_DEPLOY_HOOK"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "==== EXECUTION SUMMARY ===="
+          echo "Time: $(date)"
+          echo "Changes: ${{ steps.changes.outputs.has_changes }}"

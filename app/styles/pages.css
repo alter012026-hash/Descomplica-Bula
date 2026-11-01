@@ -1,0 +1,20 @@
+/* ================================================================
+   PÁGINAS INTERNAS — blog e páginas institucionais/de saúde
+   ================================================================ */
+
+/* cartões informativos em listas de artigos */
+.posts-grid > .curiosity-card {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+.posts-grid > .curiosity-card .curiosity-card-icon { background: var(--surface-2) !important; color: var(--text); font-size: 1.4rem; }
+.posts-grid > .curiosity-card .curiosity-card-tag { color: var(--text-muted); }
+
+/* páginas que usam <main className="section"> com container interno */
+main.section { padding-top: 24px; }
+main.section .section-title { margin-bottom: 8px; }
+
+/* a regra de transição do navegador não deve pintar faixa branca ao rolar */
+html { background: var(--bg); }

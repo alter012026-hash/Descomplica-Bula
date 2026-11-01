@@ -1,0 +1,49 @@
+name: Enviar Newsletter Diária
+
+# Dispara depois do workflow "Gerar e Publicar Artigos" (08:00 BRT), com
+# margem para o deploy do post novo na Vercel terminar antes de avisarmos
+# os inscritos por e-mail.
+on:
+  schedule:
+    - cron: "0 14 * * *"   # 11:00 horário de Brasília
+
+  workflow_dispatch: {}
+
+# 🔒 Evita duas execuções simultâneas pisando no mesmo commit de state
+concurrency:
+  group: newsletter-sender
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+
+    env:
+      TZ: America/Sao_Paulo
+
+    steps:
+      - name: Validate secrets
+        run: |
+          test -n "${{ secrets.NEWSLETTER_CRON_SECRET }}" || (echo "Missing NEWSLETTER_CRON_SECRET" && exit 1)
+          test -n "${{ secrets.SITE_URL }}" || (echo "Missing SITE_URL" && exit 1)
+
+      - name: Disparar envio diário
+        env:
+          NEWSLETTER_CRON_SECRET: ${{ secrets.NEWSLETTER_CRON_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          echo "🕒 Execução: $(date)"
+
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $NEWSLETTER_CRON_SECRET" \
+            "$SITE_URL/api/newsletter/send-daily")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "📨 Resposta ($http_code): $body"
+
+          if [ "$http_code" -ge 400 ]; then
+            echo "❌ Falha ao enviar newsletter"
+            exit 1
+          fi

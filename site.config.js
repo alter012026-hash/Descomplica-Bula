@@ -1,0 +1,100 @@
+const siteConfig = {
+  name: "Descomplica Bula",
+  tagline: "Informação sobre medicamentos em linguagem simples",
+  description:
+    "Entenda bulas, usos, cuidados e alertas sobre medicamentos com informação clara, fontes oficiais e responsabilidade.",
+  url: "https://descomplicabula.com.br",
+  locale: "pt_BR",
+  language: "pt-BR",
+  niche: "medicamentos e saúde",
+  keywords: [
+    "bula de medicamento",
+    "informação sobre medicamentos",
+    "uso seguro de medicamentos",
+    "efeitos colaterais",
+    "interações medicamentosas",
+    "Anvisa",
+  ],
+  contactEmail: "contato@descomplicabula.com.br",
+  author: {
+    name: "Redação Descomplica Bula",
+    bio: "Equipe editorial que produz conteúdo informativo com fontes oficiais e revisão humana. O site não substitui orientação de profissionais de saúde.",
+    avatar: null,
+  },
+  methodology: {
+    summary:
+      "Conteúdo informativo produzido com apoio de inteligência artificial, checagem humana obrigatória e consulta a fontes oficiais. Não substitui a bula, o farmacêutico ou o profissional de saúde que acompanha você.",
+  },
+  affiliates: [],
+  adsense: {
+    enabled: false,
+    publisherId: "",
+    slots: { header: "", inArticle: "", sidebar: "", articleEnd: "" },
+  },
+  generation: {
+    articlesPerRun: 1,
+    tone: "claro, acolhedor, preciso e cauteloso, sem alarmismo",
+    audienceLevel: "público geral, sem pressupor conhecimento de saúde",
+    minWords: 900,
+    categories: [
+      "Entenda a bula",
+      "Uso seguro",
+      "Efeitos e reações",
+      "Interações",
+      "Grupos especiais",
+      "Formas e apresentações",
+      "Genéricos e similares",
+      "Armazenamento e descarte",
+      "Alertas da Anvisa",
+      "Saúde e prevenção",
+    ],
+  },
+  officialSourceDomains: [
+    "gov.br",
+    "anvisa.gov.br",
+    "bvsms.saude.gov.br",
+    "fiocruz.br",
+    "cff.org.br",
+    "who.int",
+    "medlineplus.gov",
+    "nhs.uk",
+  ],
+  emergency: {
+    samu: "192",
+    poisonCenter: "0800 722 6001",
+    cvv: "188",
+  },
+  seo: {
+    twitterHandle: null,
+    ogImage: "/og-default.jpg",
+    googleSiteVerification: "",
+  },
+  navigation: [
+    { label: "Medicamentos", href: "/blog?categoria=Entenda%20a%20bula" },
+    { label: "Uso seguro", href: "/blog?categoria=Uso%20seguro" },
+    { label: "Efeitos e reações", href: "/blog?categoria=Efeitos%20e%20reações" },
+    { label: "Interações", href: "/blog?categoria=Interações" },
+    { label: "Fontes oficiais", href: "/fontes-oficiais" },
+  ],
+  footerNavigation: [
+    { label: "Sobre", href: "/sobre" },
+    { label: "Metodologia", href: "/metodologia" },
+    { label: "Fontes oficiais", href: "/fontes-oficiais" },
+    { label: "Aviso de saúde", href: "/aviso-de-saude" },
+    { label: "Privacidade", href: "/privacidade" },
+    { label: "Contato", href: "/contato" },
+  ],
+  quickStart: {
+    title: "O que você quer entender?",
+    items: [
+      { label: "Como ler uma bula", hint: "Entenda as informações principais", href: "/blog?categoria=Entenda%20a%20bula" },
+      { label: "Uso seguro de medicamentos", hint: "Cuidados gerais e orientação", href: "/blog?categoria=Uso%20seguro" },
+      { label: "Efeitos e reações", hint: "Saiba quando buscar orientação", href: "/blog?categoria=Efeitos%20e%20reações" },
+      { label: "Interações", hint: "Medicamentos, alimentos e suplementos", href: "/blog?categoria=Interações" },
+      { label: "Genéricos e similares", hint: "Entenda as diferenças", href: "/blog?categoria=Genéricos%20e%20similares" },
+      { label: "Alertas da Anvisa", hint: "Comunicados e recolhimentos", href: "/blog?categoria=Alertas%20da%20Anvisa" },
+    ],
+  },
+};
+
+export default siteConfig;

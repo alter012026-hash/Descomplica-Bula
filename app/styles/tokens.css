@@ -1,0 +1,357 @@
+/* ================================================================
+   DESCOMPLICA BULA — Design system
+   ----------------------------------------------------------------
+   Conceito: informação acessível, confiança e cuidado. Verde-bula como
+   cor principal, âmbar para atenção e formas suaves inspiradas em cápsulas.
+
+   Paleta
+     Verde-bula   #176B4D   ação e identidade
+     Âmbar        #E8A72E   destaque e atenção
+     Tinta        #18352A   texto principal
+     Papel        #F7F9F4   fundo claro
+
+   Tipografia
+     Bricolage Grotesque  títulos e interface (eixos de largura/óptico)
+     Literata             leitura longa (desenhada para telas pequenas)
+
+   Tokens mantêm nomes compartilhados (--primary, --surface, --border…)
+   para que páginas administrativas herdem a identidade do site
+   identidade sem edição.
+   ================================================================ */
+
+:root {
+  /* ---- marca ---- */
+  --ink:            #18352A;
+  --on-ink:         #F7F9F4;
+  --primary:        #176B4D;
+  --primary-light:  #2D8A66;
+  --primary-dark:   #10553B;
+  --on-primary:     #FFFFFF;
+  --link:           #176B4D;
+  --hl:             #E8A72E;
+  --hl-soft:        #FFF1D1;
+  --on-hl:          #18352A;
+  --accent:         #A75E12;
+  --accent-light:   #C9781C;
+  --accent-dark:    #804608;
+  --gold:           #B47716;
+  --success:        #176B4D;
+  --success-soft:   #E1F2E9;
+  --focus:          #176B4D;
+
+  /* ---- superfícies ---- */
+  --bg:             #F7F9F4;
+  --surface:        #FFFFFF;
+  --surface-2:      #EAF1E9;
+  --surface-3:      #DDE9DD;
+  --text:           #18352A;
+  --text-secondary: #40594B;
+  --text-muted:     #63796B;
+  --border:         #D2DED1;
+  --border-soft:    #E3EBE0;
+  --glass-border:   rgba(24, 53, 42, 0.10);
+  --header-bg:      rgba(247, 249, 244, 0.86);
+  --hero-bg:        #176B4D;
+  --hero-fg:        #FFFFFF;
+  --hero-ring:      #FFFFFF;
+  --footer-bg:      #18352A;
+
+  /* ---- sombras (usadas com parcimônia: a estrutura vem de bordas) ---- */
+  --shadow-sm:      0 1px 2px rgba(24, 53, 42, 0.08);
+  --shadow-md:      0 10px 26px -10px rgba(24, 53, 42, 0.22);
+  --shadow-lg:      0 22px 44px -16px rgba(24, 53, 42, 0.30);
+  --shadow-xl:      0 34px 70px -20px rgba(24, 53, 42, 0.38);
+
+  /* ---- tipografia (variáveis injetadas por next/font em layout.js) ---- */
+  --font-display:   var(--f-display), "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body:      var(--f-display), "Helvetica Neue", Arial, sans-serif;
+  --font-read:      var(--f-read), Georgia, "Times New Roman", serif;
+  --font-mono:      var(--f-display), "Helvetica Neue", Arial, sans-serif;
+
+  /* ---- escala e forma ---- */
+  --max-width:      1180px;
+  --content-width:  720px;
+  --gutter:         20px;
+  --radius-sm:      10px;
+  --radius:         14px;
+  --radius-lg:      20px;
+  --radius-xl:      28px;
+  --radius-full:    999px;
+
+  --header-h:       60px;
+  --dock-h:         0px;
+
+  /* ---- movimento ---- */
+  --ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-io:        cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast:         160ms;
+  --t-base:         280ms;
+  --t-slow:         480ms;
+
+  /* Cápsulas decorativas, em máscara monocromática. */
+  --capsules: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 180%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22%3E%3Cdefs%3E%3Cpattern id=%22p%22 width=%2264%22 height=%2244%22 patternUnits=%22userSpaceOnUse%22%3E%3Crect x=%224%22 y=%227%22 width=%2228%22 height=%2210%22 rx=%225%22/%3E%3Crect x=%2238%22 y=%2228%22 width=%2220%22 height=%227%22 rx=%223.5%22/%3E%3C/pattern%3E%3C/defs%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22url(%23p)%22/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] {
+  --ink:            #EAF3E9;
+  --on-ink:         #0B1913;
+  --primary:        #63B78D;
+  --primary-light:  #83D0A8;
+  --primary-dark:   #398A63;
+  --link:           #83D0A8;
+  --hl:             #E8A72E;
+  --hl-soft:        #493715;
+  --accent:         #F2B75C;
+  --accent-light:   #F6C779;
+  --accent-dark:    #D99432;
+  --success:        #63B78D;
+  --success-soft:   #173526;
+  --focus:          #E8A72E;
+
+  --bg:             #0B1913;
+  --surface:        #13251C;
+  --surface-2:      #1A3024;
+  --surface-3:      #23402F;
+  --text:           #EAF3E9;
+  --text-secondary: #C0D2C2;
+  --text-muted:     #93AA98;
+  --border:         #31523D;
+  --border-soft:    #263F30;
+  --glass-border:   rgba(234, 243, 233, 0.12);
+  --header-bg:      rgba(11, 25, 19, 0.84);
+  --hero-bg:        #123D2A;
+  --footer-bg:      #07120D;
+
+  --shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md:      0 10px 26px -10px rgba(0, 0, 0, 0.6);
+  --shadow-lg:      0 22px 44px -16px rgba(0, 0, 0, 0.7);
+  --shadow-xl:      0 34px 70px -20px rgba(0, 0, 0, 0.8);
+}
+
+@media (min-width: 720px)  { :root { --gutter: 32px; --header-h: 68px; } }
+@media (max-width: 859px)  { :root { --dock-h: 68px; } }
+
+/* ── Cor por categoria: tudo derivado de --h (matiz) ───────────── */
+.cat {
+  --cat:       hsl(var(--h, 222) 85% 48%);
+  --cat-text:  hsl(var(--h, 222) 75% 27%);
+  --cat-soft:  hsl(var(--h, 222) 100% 95%);
+  --cat-mid:   hsl(var(--h, 222) 95% 88%);
+  --cat-deep:  hsl(var(--h, 222) 70% 20%);
+}
+[data-theme="dark"] .cat {
+  --cat:       hsl(var(--h, 222) 90% 66%);
+  --cat-text:  hsl(var(--h, 222) 95% 80%);
+  --cat-soft:  hsl(var(--h, 222) 45% 15%);
+  --cat-mid:   hsl(var(--h, 222) 45% 24%);
+  --cat-deep:  hsl(var(--h, 222) 60% 14%);
+}
+
+/* ── Reset e base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  color-scheme: light;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html[data-theme="dark"] { color-scheme: dark; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: calc(var(--dock-h) + env(safe-area-inset-bottom, 0px));
+  transition: background var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out);
+}
+
+img, svg, video { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
+input, textarea, select { font: inherit; color: inherit; }
+ul, ol { list-style: none; }
+hr { border: none; }
+
+/* A seleção de texto é o marca-texto */
+::selection { background: var(--hl); color: var(--on-hl); }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* números alinhados em datas, contadores e tempos */
+time, .tabular, .post-card-date, .post-card-reading, .article-meta-item {
+  font-variant-numeric: tabular-nums;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  /* respeita o "notch" do celular em modo paisagem */
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ── Botões ────────────────────────────────────────────────────── */
+.btn, .hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 2px solid transparent;
+  background: var(--primary);
+  color: var(--on-primary);
+  transition: transform var(--t-fast) var(--ease-out), background var(--t-fast), color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-base) var(--ease-out);
+}
+.btn:hover, .hero-cta:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn:active, .hero-cta:active { transform: translateY(0) scale(0.98); box-shadow: none; }
+
+.btn--hl { background: var(--hl); color: var(--on-hl); }
+.btn--hl:hover { background: #FFE070; }
+.btn--ghost { background: transparent; color: inherit; border-color: currentColor; }
+.btn--ghost:hover { background: rgba(255, 255, 255, 0.12); }
+.btn--outline { background: transparent; color: var(--text); border-color: var(--border); }
+.btn--outline:hover { background: var(--surface); border-color: var(--primary); color: var(--link); }
+.btn--sm { min-height: 40px; padding: 0 18px; font-size: 0.92rem; }
+
+/* ── Chip de categoria (também é o "marcador" do cartão) ───────── */
+.chip, .post-card-category, .article-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 26px;
+  padding: 0 11px 0 9px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cat-text, var(--text));
+  background: var(--cat-mid, var(--surface-2));
+  white-space: nowrap;
+}
+.chip::before, .post-card-category::before, .article-cat-badge::before {
+  content: "";
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--cat, var(--primary));
+  flex: none;
+}
+
+/* ── Capa decorativa com cápsulas ───────────────────────────────────
+   Máscara monocromática colorida pela categoria; posições determinísticas por slug. */
+.cover {
+  position: relative;
+  overflow: hidden;
+  background: var(--cat-soft);
+  isolation: isolate;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cat);
+  opacity: 0.42;
+  -webkit-mask: var(--capsules) center / cover no-repeat;
+          mask: var(--capsules) center / cover no-repeat;
+  z-index: 0;
+}
+.cover-marks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.cover-marks rect { fill: var(--cat); }
+.cover--deep { background: var(--cat-deep); }
+.cover--deep::before { background: #fff; opacity: 0.22; }
+.cover--deep .cover-marks rect { fill: var(--hl); }
+
+/* ── Seções e cabeçalhos de seção ─────────────────────────────── */
+.section { padding: 56px 0; }
+.section--light { background: transparent; }
+.section--alt { background: var(--surface-2); }
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 1.2rem + 1.7vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-stretch: 92%;
+  color: var(--text);
+  text-wrap: balance;
+}
+.section-label {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.section-header > .section-label { flex: 0 0 100%; margin: 0 0 -10px; }
+.section-link {
+  flex: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--link);
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--t-fast);
+}
+.section-link:hover { border-bottom-color: currentColor; }
+
+@media (min-width: 860px) { .section { padding: 80px 0; } }
+
+/* Duas seções "lisas" seguidas somavam os dois paddings (buraco enorme entre elas).
+   A segunda cede o espaço de cima: o respiro fica só o de uma seção. */
+.section:not(.section--alt) + .section:not(.section--alt) { padding-top: 0; }
+/* Celular: seções mais compactas */
+@media (max-width: 639px) {
+  .section { padding: 40px 0; }
+  .section-header { margin-bottom: 22px; gap: 10px; }
+  .section--tight { padding: 28px 0; }
+}
+
+/* Revelação ao rolar: desativada de propósito. Elementos ficam visíveis
+   desde o primeiro paint (melhor LCP/CLS no celular); o movimento do site
+   fica concentrado no hero e nas transições entre páginas. */
+.reveal, .reveal-stagger, .stagger-in { opacity: 1; transform: none; }
