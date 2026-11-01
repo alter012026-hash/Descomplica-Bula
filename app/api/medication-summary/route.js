@@ -4,6 +4,7 @@ import {
   buildMedicationSummaryPrompt,
   parseMedicationSummary,
 } from "../../../lib/medication-summary";
+import { generateMedicationSummary } from "../../../lib/medication-summary-ai";
 import { getUrgentResponse } from "../../../lib/medical-safety";
 import siteConfig from "../../../site.config";
 
@@ -15,8 +16,6 @@ const MAX_NAME_LENGTH = 120;
 const MAX_STRENGTH_LENGTH = 60;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const SUMMARY_LIMIT = { limit: 3, windowMs: 10 * 60 * 1000 };
-const GROQ_MODEL = "qwen/qwen3.8-27b";
-
 export async function POST(request) {
   try {
     const contentLength = Number(request.headers.get("content-length"));
@@ -76,56 +75,25 @@ export async function POST(request) {
       return NextResponse.json({ urgent: true, message: urgentResponse });
     }
 
-    const apiKey = process.env.GROQ_API_KEY?.trim();
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "O resumo está temporariamente indisponível. Tente novamente mais tarde." },
-        { status: 503 }
-      );
-    }
-
     const prompt = buildMedicationSummaryPrompt({
       medicineName,
       strength,
       hasImage: Boolean(imageData),
     });
-    const content = [{ type: "text", text: prompt }];
-    if (imageData) {
-      content.push({ type: "image_url", image_url: { url: imageData } });
+    let response;
+    try {
+      response = await generateMedicationSummary({ prompt, imageData });
+    } catch (error) {
+      if (error.code === "NO_SUMMARY_PROVIDER") {
+        return NextResponse.json(
+          { error: "O resumo ainda não está configurado. Cadastre GROQ_API_KEY ou GEMINI_API_KEY nas variáveis da Vercel e publique um novo deploy." },
+          { status: 503 }
+        );
+      }
+      throw error;
     }
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: [{ role: "user", content }],
-        temperature: 0.2,
-        max_completion_tokens: 1200,
-        response_format: { type: "json_object" },
-      }),
-      signal: AbortSignal.timeout(25_000),
-    });
-
-    if (!response.ok) {
-      const details = await response.text();
-      console.error("[medication-summary][groq]", response.status, details.slice(0, 500));
-      return NextResponse.json(
-        { error: "Não foi possível gerar o resumo agora. Tente novamente mais tarde." },
-        { status: 502 }
-      );
-    }
-
-    const payload = await response.json();
-    const raw = payload.choices?.[0]?.message?.content;
-    if (typeof raw !== "string" || !raw.trim()) {
-      throw new Error("A IA retornou uma resposta vazia.");
-    }
-
-    const summary = parseMedicationSummary(raw);
+    const summary = parseMedicationSummary(response.text);
     if (!summary.identified) {
       return NextResponse.json({
         identified: false,
@@ -135,12 +103,13 @@ export async function POST(request) {
 
     return NextResponse.json({
       ...summary,
+      provider: response.provider,
       officialLeafletUrl: "https://consultas.anvisa.gov.br/#/bulario/",
     });
   } catch (error) {
-    console.error("[medication-summary][POST]", error);
+    console.error("[medication-summary][POST]", error.code || "SUMMARY_FAILED", error.message);
     return NextResponse.json(
-      { error: "Não foi possível gerar o resumo agora. Confira os dados e tente novamente." },
+      { error: "Não foi possível gerar o resumo agora. Confira se GROQ_API_KEY ou GEMINI_API_KEY está válida na Vercel. Se o problema continuar, consulte os logs da função medication-summary." },
       { status: 502 }
     );
   }
