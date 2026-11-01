@@ -42,5 +42,17 @@
       "não há links oficiais para checagem direta"
     ],
     "error": "VALIDATION_FAILED: falta ao menos um link HTTPS para uma fonte oficial permitida; não há links oficiais para checagem direta"
+  },
+  {
+    "timestamp": "2026-11-01T16:19:24.435Z",
+    "topic": "Saúde - Prefeitura Municipal de Ubatuba",
+    "category": "Alertas da Anvisa",
+    "status": "VALIDATION_FAILED",
+    "issues": [
+      "falta a referência à bula oficial vigente",
+      "falta ao menos um link HTTPS para uma fonte oficial permitida",
+      "não há links oficiais para checagem direta"
+    ],
+    "error": "VALIDATION_FAILED: falta a referência à bula oficial vigente; falta ao menos um link HTTPS para uma fonte oficial permitida; não há links oficiais para checagem direta"
   }
 ]
