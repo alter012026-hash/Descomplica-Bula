@@ -23,7 +23,7 @@ O deploy de produção já é feito pela integração nativa Vercel-GitHub a cad
 | Admin (`/admin`) | `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | — | Defina uma senha forte e gere um segredo aleatório. |
 | Rascunhos diários com IA | Uma chave: `GROK_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` ou `GEMINI_API_KEY` | A mesma chave, com o mesmo nome | O workflow gera rascunhos para revisão; não publica artigos automaticamente. |
 | Newsletter diária | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEWSLETTER_CRON_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `NEWSLETTER_CRON_SECRET`, `SITE_URL` | Use o mesmo segredo cron nos dois painéis, um remetente verificado no Resend e um token GitHub com acesso de leitura e escrita ao repositório. O `SITE_URL` deve ser a URL pública implantada. |
-| Métricas persistentes | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash. |
+| Métricas persistentes | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | — | Credenciais da base Redis REST do Upstash. O projeto usa o prefixo `descomplica-bula:` nas chaves e pode compartilhar uma base; nesse caso, os limites de uso são compartilhados entre projetos. |
 
 `GITHUB_TOKEN` e `GITHUB_REPO` na Vercel são necessários para ações do painel administrativo que escrevem no GitHub e para a newsletter atualizar seu estado de envio. O token deve ter permissão de conteúdo de leitura e escrita no repositório. O workflow de geração usa o `GITHUB_TOKEN` automático do Actions, com permissão de escrita no repositório. `VERCEL_DEPLOY_HOOK` é opcional para acionamentos extras e não é necessário para o deploy normal.
 

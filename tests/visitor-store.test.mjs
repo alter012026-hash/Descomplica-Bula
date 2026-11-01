@@ -185,13 +185,13 @@ test("fluxo completo: visita nova, páginas, tempo, ação, painel e apagar", as
   await recordVisitorPageview({ ...a2, path: "/blog", now: t(40), meta: { country: "BR" } });
 
   // pv:d:… (estatística anônima) para a cobertura
-  redis.db.set("pv:d:2026-10-25", new Map([["s", "10"]]));
+  redis.db.set("descomplica-bula:pv:d:2026-10-25", new Map([["s", "10"]]));
 
   // Retenção definida
-  assert.ok(redis.ttl.get(`vs:${a.sid}`) === 90 * 86400);
-  assert.ok(redis.ttl.get(`vl:${a.sid}`) === 90 * 86400);
-  assert.ok(redis.ttl.get("cv:d:2026-10-25") > 0);
-  assert.ok(redis.ttl.get("cv:u:2026-10-25") > 0);
+  assert.ok(redis.ttl.get(`descomplica-bula:vs:${a.sid}`) === 90 * 86400);
+  assert.ok(redis.ttl.get(`descomplica-bula:vl:${a.sid}`) === 90 * 86400);
+  assert.ok(redis.ttl.get("descomplica-bula:cv:d:2026-10-25") > 0);
+  assert.ok(redis.ttl.get("descomplica-bula:cv:u:2026-10-25") > 0);
 
   // Agregados
   const stats = await readVisitorStats(7, { titleBySlug: { "como-estudar": "Como estudar" } });
@@ -240,9 +240,9 @@ test("fluxo completo: visita nova, páginas, tempo, ação, painel e apagar", as
   const after = await listSessions({ limit: 10 });
   assert.equal(after.total, 1);
   assert.equal(after.sessions[0].landing, "/");
-  assert.equal(redis.db.has(`vv:${a.vid}`), false);
-  assert.equal(redis.db.has(`vl:${a.sid}`), false);
-  assert.equal(redis.db.has(`vl:${b.sid}`), true);
+  assert.equal(redis.db.has(`descomplica-bula:vv:${a.vid}`), false);
+  assert.equal(redis.db.has(`descomplica-bula:vl:${a.sid}`), false);
+  assert.equal(redis.db.has(`descomplica-bula:vl:${b.sid}`), true);
 });
 
 test("engajamento ignora tempo zero e limita valores absurdos", async () => {
@@ -250,10 +250,10 @@ test("engajamento ignora tempo zero e limita valores absurdos", async () => {
   const ids = resolveIds({});
   await recordVisitorPageview({ ...ids, path: "/", meta: {} });
   await recordVisitorEngagement({ sid: ids.sid, path: "/", seconds: 0, scroll: 0 }); // nada a registrar
-  assert.equal(redis.db.get(`vs:${ids.sid}`).get("sec"), undefined);
+  assert.equal(redis.db.get(`descomplica-bula:vs:${ids.sid}`).get("sec"), undefined);
   await recordVisitorEngagement({ sid: ids.sid, path: "/", seconds: 99999, scroll: 500 });
-  assert.equal(redis.db.get(`vs:${ids.sid}`).get("sec"), "1800");
-  assert.match(redis.db.get(`vl:${ids.sid}`).at(-1), /\|1800\|100$/);
+  assert.equal(redis.db.get(`descomplica-bula:vs:${ids.sid}`).get("sec"), "1800");
+  assert.match(redis.db.get(`descomplica-bula:vl:${ids.sid}`).at(-1), /\|1800\|100$/);
 });
 
 test("aggregateVisitors com dias vazios não quebra nem divide por zero", () => {
