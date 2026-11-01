@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 const colors = {
-  background: "#F5F9FC",
-  border: "#CEDDE6",
+  background: "#FFFFFF",
+  border: "#E4E7EC",
   surface: "#FFFFFF",
-  text: "#17324D",
-  muted: "#405A70",
-  primary: "#087F8C",
-  green: "#0B7A47",
-  red: "#C93525",
+  text: "#17212B",
+  muted: "#344054",
+  primary: "#B4232C",
+  green: "#198754",
+  red: "#B42318",
 };
 
 function formatDate(value) {

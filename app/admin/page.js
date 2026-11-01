@@ -12,27 +12,27 @@ const { getEditorialTitleIssue } = titleQuality;
 
 /* ─── Design tokens ─── */
 const C = {
-  bg: "#F5F9FC",
-  bgElevated: "#EAF3F7",
+  bg: "#FFFFFF",
+  bgElevated: "#F8FAFC",
   surface: "#FFFFFF",
-  surfaceHover: "#EAF3F7",
-  border: "#CEDDE6",
-  borderSoft: "#E3EDF2",
-  primary: "#087F8C",
-  primaryHover: "#06636D",
-  primaryGlow: "rgba(8,127,140,0.12)",
-  accent: "#A87517",
-  accentGlow: "rgba(197,138,27,0.30)",
-  hl: "#C58A1B",
-  ink: "#17324D",
-  green: "#087F72",
-  greenGlow: "rgba(8,127,114,0.10)",
-  red: "#C93525",
-  redGlow: "rgba(201,53,37,0.10)",
-  purple: "#3D8292",
-  text: "#17324D",
-  textMuted: "#405A70",
-  textFaint: "#5D7182",
+  surfaceHover: "#F8FAFC",
+  border: "#E4E7EC",
+  borderSoft: "#F1F4F6",
+  primary: "#B4232C",
+  primaryHover: "#8F1821",
+  primaryGlow: "rgba(180,35,44,0.12)",
+  accent: "#B54708",
+  accentGlow: "rgba(181,71,8,0.18)",
+  hl: "#B4232C",
+  ink: "#17212B",
+  green: "#198754",
+  greenGlow: "rgba(25,135,84,0.10)",
+  red: "#B42318",
+  redGlow: "rgba(180,35,24,0.10)",
+  purple: "#2563EB",
+  text: "#17212B",
+  textMuted: "#344054",
+  textFaint: "#667085",
   gradient: "none",
 };
 
@@ -364,7 +364,7 @@ function Toast({ msg, type }) {
       background: C.surface, border: `1px solid ${color}44`,
       borderRadius: 12, padding: "12px 18px", color,
       fontWeight: 600, fontSize: 13,
-      boxShadow: `0 8px 28px rgba(18,22,58,0.18), 0 0 0 1px ${color}22`,
+      boxShadow: `0 8px 28px rgba(23,33,43,0.14), 0 0 0 1px ${color}22`,
       display: "flex", alignItems: "center", gap: 8,
       maxWidth: "calc(100vw - 32px)",
       animation: "fadeInUp 0.2s ease",
@@ -452,7 +452,7 @@ function LoginScreen({ onLogin }) {
         width: "100%", maxWidth: 380,
         background: C.surface, border: `1px solid ${C.border}`,
         borderRadius: 20, padding: "36px 32px",
-        boxShadow: "0 24px 64px rgba(18,22,58,0.12)",
+        boxShadow: "0 24px 64px rgba(23,33,43,0.12)",
       }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <span aria-hidden="true" style={{
@@ -1628,6 +1628,9 @@ function ManualComposerTab({ toast, mode = "manual" }) {
   const [loadingLibrary, setLoadingLibrary] = useState(true);
   const [draftEditingId, setDraftEditingId] = useState(null);
   const [editingPostFile, setEditingPostFile] = useState(null);
+  const [updatingPostFile, setUpdatingPostFile] = useState(null);
+  const [updateSources, setUpdateSources] = useState("");
+  const [updateBusy, setUpdateBusy] = useState(false);
 
   // Mantém form.body (markdown, o que é salvo no arquivo .md) sincronizado
   // com o HTML exibido no editor visual, nos dois sentidos.
@@ -1894,6 +1897,35 @@ function ManualComposerTab({ toast, mode = "manual" }) {
     }
   }
 
+  async function proposeArticleUpdate(post) {
+    const sources = updateSources.split(/\r?\n/).map((source) => source.trim()).filter(Boolean);
+    if (sources.length === 0) {
+      toast("Adicione ao menos uma URL oficial da Anvisa ou de outro órgão permitido.", "error");
+      return;
+    }
+
+    setUpdateBusy(true);
+    try {
+      const response = await fetch("/api/admin/article-updates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file: post.file, sources }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Não foi possível gerar a atualização.");
+      const checkedCount = data.verifiedSources?.length || 0;
+      const failedCount = data.failedSources?.length || 0;
+      toast(`Proposta criada com ${checkedCount} fonte(s) checada(s)${failedCount ? `; ${failedCount} link(s) não foram usados` : ""}. Revise antes de aprovar.`, "ok");
+      setUpdatingPostFile(null);
+      setUpdateSources("");
+      await loadDrafts();
+    } catch (error) {
+      toast(error.message || "Erro ao propor atualização.", "error");
+    } finally {
+      setUpdateBusy(false);
+    }
+  }
+
   async function deletePublishedPost(post) {
     if (!confirm(`Remover permanentemente "${post.title}"?`)) return;
     try {
@@ -2152,10 +2184,46 @@ function ManualComposerTab({ toast, mode = "manual" }) {
                   </div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <a href={`/blog/${post.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btnGhost, textDecoration: "none" }}>Abrir</a>
+                    <button
+                      style={s.btnGhost}
+                      onClick={() => {
+                        setUpdatingPostFile(updatingPostFile === post.file ? null : post.file);
+                        setUpdateSources("");
+                      }}
+                    >
+                      Atualizar com fontes oficiais
+                    </button>
                     <button style={s.btnGhost} onClick={() => editPublishedPost(post)}>Editar</button>
                     <button style={s.btnDanger} onClick={() => deletePublishedPost(post)}>Remover</button>
                   </div>
                 </div>
+                {updatingPostFile === post.file && (
+                  <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${C.border}` }}>
+                    <label style={{ ...s.label, display: "block" }}>
+                      Links oficiais recentes (um por linha; até 3)
+                      <textarea
+                        rows={3}
+                        style={{ ...s.input, resize: "vertical", marginTop: 6 }}
+                        placeholder={"https://www.gov.br/anvisa/...\nhttps://consultas.anvisa.gov.br/..."}
+                        value={updateSources}
+                        onChange={(event) => setUpdateSources(event.target.value)}
+                      />
+                    </label>
+                    <p style={{ color: C.textMuted, fontSize: 12, lineHeight: 1.5, margin: "6px 0 10px" }}>
+                      O sistema acessa as páginas oficiais e usa o texto encontrado para criar uma proposta. O artigo atual só muda depois da revisão e aprovação.
+                    </p>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        style={s.btn}
+                        disabled={updateBusy}
+                        onClick={() => proposeArticleUpdate(post)}
+                      >
+                        {updateBusy ? "Checando fontes e gerando…" : "Gerar proposta para revisão"}
+                      </button>
+                      <button style={s.btnGhost} disabled={updateBusy} onClick={() => setUpdatingPostFile(null)}>Cancelar</button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -2487,7 +2555,7 @@ export default function AdminPage() {
       {/* Cabeçalho */}
       <header style={{
         borderBottom: `1px solid ${C.border}`,
-        background: "rgba(244,246,255,0.88)",
+        background: "rgba(248,250,252,0.92)",
         backdropFilter: "blur(12px)",
         padding: "0 20px",
         display: "flex",

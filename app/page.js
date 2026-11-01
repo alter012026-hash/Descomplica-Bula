@@ -36,7 +36,7 @@ export default function HomePage() {
                 : "Todo conteúdo é revisado antes de ser publicado."}
             </p>
           </div>
-          <MedicationSummary />
+          <QuickStart />
         </div>
       </section>
 
@@ -48,9 +48,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--alt home-shortcuts">
+      <section className="section section--alt home-med-summary">
         <div className="container">
-          <QuickStart />
+          <MedicationSummary />
         </div>
       </section>
 

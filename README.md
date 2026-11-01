@@ -33,6 +33,8 @@ Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, 
 
 - Configure os dados do site em `site.config.js`, incluindo domínio, e-mail, categorias e fontes oficiais.
 - A geração de artigos depende de uma chave de provedor de IA e das variáveis de ambiente documentadas em `.env.example`.
+- A geração valida a categoria do tema, acessa até três URLs oficiais e fornece o texto extraído como contexto; se nenhuma fonte legível puder ser checada, a geração não é aprovada. Isso não comprova automaticamente cada afirmação: a revisão humana continua obrigatória.
+- No admin, use **Artigos → Posts publicados → Atualizar com fontes oficiais** para propor uma revisão. Informe páginas da Anvisa ou de outros domínios permitidos; a proposta fica na fila editorial, mantém a versão publicada intacta e tem as fontes acessadas novamente antes da aprovação.
 - Artigos gerados e enviados manualmente passam por verificações automáticas e devem ser aprovados por uma pessoa antes da publicação.
 - A validação exige fontes HTTPS de domínios permitidos, referência à bula oficial, avisos de segurança e contatos de emergência. Ela não substitui revisão clínica e editorial.
 - O recurso “Tire sua dúvida” responde com base no artigo e encaminha perguntas de risco para serviços de emergência. Não use a resposta para decidir tratamento ou dose.
@@ -46,7 +48,7 @@ Gere `ADMIN_SESSION_SECRET` e `NEWSLETTER_CRON_SECRET` com valores aleatórios, 
 | `npm run build` | Compilar para produção |
 | `npm start` | Servir a compilação |
 | `npm test` | Executar os testes automatizados |
-| `npm run generate-article` | Gerar uma sugestão de artigo |
+| `npm run generate-article` | Gerar uma sugestão de artigo; aceita `--topic "tema" --category "categoria"` |
 | `npm run audit:seo` | Auditar SEO dos artigos |
 | `npm run verify:seo` | Verificar metadados e rotas |
 | `npm run check:redis` | Verificar a configuração opcional do Redis |

@@ -6,16 +6,13 @@ import config from "../../../site.config";
 // os dados do post chegam via query string, passados por quem gera o link.
 export const runtime = "edge";
 
-// Paleta de cores por categoria
-const CATEGORY_COLORS = {
-  "Uso seguro": { bg: "#176B4D", accent: "#E8A72E" },
-  "Entenda a bula": { bg: "#176B4D", accent: "#E8A72E" },
-  "Efeitos e reações": { bg: "#6F4A13", accent: "#F2C36B" },
-  "Interações": { bg: "#244D5A", accent: "#87C7D1" },
-  "Alertas da Anvisa": { bg: "#683E20", accent: "#F2B75C" },
+const COLORS = {
+  background: "#F8FAFC",
+  accent: "#B4232C",
+  accentSoft: "#FCE8EA",
+  text: "#17212B",
+  textMuted: "#344054",
 };
-
-const DEFAULT_COLORS = { bg: "#176B4D", accent: "#E8A72E" };
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -27,7 +24,7 @@ export async function GET(request) {
   const excerpt     = searchParams.get("excerpt")     ?? config.description;
   const readingTime = searchParams.get("readingTime") ?? "";
 
-  const { bg, accent } = CATEGORY_COLORS[category] ?? DEFAULT_COLORS;
+  const { background, accent, accentSoft, text, textMuted } = COLORS;
 
   // Trunca título e excerpt para não explodir o card
   const shortTitle   = title.length   > 72 ? title.slice(0, 69)   + "…" : title;
@@ -42,7 +39,7 @@ export async function GET(request) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: bg,
+          background,
           padding: "64px 72px",
           fontFamily: "sans-serif",
           position: "relative",
@@ -58,7 +55,7 @@ export async function GET(request) {
             width: "420px",
             height: "420px",
             borderRadius: "50%",
-            background: accent,
+            background: accentSoft,
             opacity: 0.08,
           }}
         />
@@ -79,7 +76,7 @@ export async function GET(request) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span
             style={{
-              color: "white",
+              color: text,
               fontSize: "22px",
               fontWeight: "700",
               letterSpacing: "-0.5px",
@@ -91,8 +88,8 @@ export async function GET(request) {
 
           <span
             style={{
-              background: accent,
-              color: bg,
+              background: accentSoft,
+              color: accent,
               fontSize: "14px",
               fontWeight: "700",
               padding: "6px 18px",
@@ -117,7 +114,7 @@ export async function GET(request) {
           />
           <p
             style={{
-              color: "white",
+              color: text,
               fontSize: shortTitle.length > 50 ? "40px" : "48px",
               fontWeight: "800",
               lineHeight: 1.15,
@@ -130,7 +127,7 @@ export async function GET(request) {
           </p>
           <p
             style={{
-              color: "rgba(255,255,255,0.65)",
+              color: textMuted,
               fontSize: "20px",
               lineHeight: 1.5,
               margin: 0,
@@ -147,11 +144,11 @@ export async function GET(request) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            borderTop: `1px solid rgba(255,255,255,0.12)`,
+            borderTop: `1px solid #E4E7EC`,
             paddingTop: "24px",
           }}
         >
-          <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "16px" }}>
+          <span style={{ color: "#667085", fontSize: "16px" }}>
             {config.url?.replace("https://", "") ?? "descomplicabula.com.br"}
           </span>
           {readingTime && (

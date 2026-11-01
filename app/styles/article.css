@@ -344,7 +344,7 @@
 .article-qa-btn:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
 .article-qa-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .article-qa-feedback { margin-top: 10px; font-weight: 600; font-size: 0.92rem; }
-.article-qa-feedback--error { color: var(--accent); }
+.article-qa-feedback--error { color: var(--danger); }
 @media (min-width: 640px) { .article-qa-form { flex-direction: row; } .article-qa-input { flex: 1; min-width: 0; } .article-qa { padding: 32px; } }
 
 /* relacionados */

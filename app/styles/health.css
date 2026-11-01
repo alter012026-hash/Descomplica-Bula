@@ -1,9 +1,9 @@
 .health-notice,
 .health-article-warning {
   border: 1px solid var(--border);
-  border-left: 5px solid var(--accent);
+  border-left: 5px solid var(--danger);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--hl-soft);
   color: var(--text);
   padding: 18px 20px;
   line-height: 1.65;
@@ -24,6 +24,7 @@
 
 .health-article-warning {
   margin: 24px 0;
+  background: var(--surface);
 }
 
 .health-article-warning h2 {

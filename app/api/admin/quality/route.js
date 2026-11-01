@@ -162,9 +162,7 @@ export async function POST(request) {
     const editorialDrafts = editorialDraftsFile
       ? JSON.parse(editorialDraftsFile.content || "[]")
       : [];
-    const sourceUrls = [...new Set(
-      [...article.content.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)].map((match) => match[1])
-    )];
+    const sourceUrls = [...new Set((result.verifiedSources || []).map((source) => source.url))];
     const draft = {
       id: `update-${safeFile}`,
       file: article.file,
@@ -175,6 +173,10 @@ export async function POST(request) {
       topic,
       content: article.content,
       sourceUrls,
+      sourceCheckedAt: result.verifiedSources?.[0]?.fetchedAt || null,
+      verifiedSources: (result.verifiedSources || []).map(({ url, host, fetchedAt, characterCount }) => ({
+        url, host, fetchedAt, characterCount,
+      })),
       validationIssues: result.issues,
       status: "NEEDS_REVIEW",
       generatedAt: new Date().toISOString(),

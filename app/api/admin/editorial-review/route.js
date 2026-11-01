@@ -4,6 +4,7 @@ import { commitFile, getFile, triggerVercelDeploy } from "../../../../lib/github
 import siteConfig from "../../../../site.config";
 import { validateHealthArticle } from "../../../../lib/article-generator";
 import { normalizeOfficialSources } from "../../../../lib/source-validation";
+import { fetchOfficialSources } from "../../../../lib/official-source-fetcher";
 
 const DRAFTS_PATH = ".editorial-drafts.json";
 
@@ -142,6 +143,34 @@ export async function POST(request) {
     if (!sources.length) {
       return NextResponse.json({ error: "Adicione ao menos uma fonte HTTPS oficial permitida." }, { status: 400 });
     }
+    let verifiedSources = draft.verifiedSources || [];
+    if (draft.sourceChecked || draft.verifiedSources?.length) {
+      const generatedSources = [...new Set(
+        draft.sourceChecked
+          ? draft.sourceUrls || []
+          : (draft.verifiedSources || []).map((source) => source.url)
+      )].sort();
+      const submittedSources = [...new Set(sources)].sort();
+      if (generatedSources.length !== submittedSources.length
+        || generatedSources.some((source, sourceIndex) => source !== submittedSources[sourceIndex])) {
+        return NextResponse.json({
+          error: "As fontes da revisão precisam ser as mesmas usadas para gerar esta proposta.",
+        }, { status: 409 });
+      }
+      try {
+        const checked = await fetchOfficialSources(sources, siteConfig.officialSourceDomains);
+        if (checked.failures.length) {
+          return NextResponse.json({
+            error: "Uma ou mais fontes oficiais não puderam ser checadas novamente. Atualize os links e gere uma nova proposta.",
+          }, { status: 422 });
+        }
+        verifiedSources = checked.verified.map(({ url, host, fetchedAt, characterCount }) => ({
+          url, host, fetchedAt, characterCount,
+        }));
+      } catch (error) {
+        return NextResponse.json({ error: error.message }, { status: 422 });
+      }
+    }
 
     const safeFile = String(draft.file || "");
     if (!/^\d{4}-\d{2}-\d{2}-[a-z0-9-]+\.md$/i.test(safeFile)) {
@@ -153,6 +182,11 @@ export async function POST(request) {
     const existingPost = await getFile(`posts/${safeFile}`);
     if (draft.targetFile && !existingPost) {
       return NextResponse.json({ error: "O artigo original desta atualização não existe mais." }, { status: 409 });
+    }
+    if (draft.sourceChecked && existingPost?.sha !== draft.targetSha) {
+      return NextResponse.json({
+        error: "O artigo publicado mudou desde a geração desta proposta. Gere uma nova atualização para evitar sobrescrever alterações recentes.",
+      }, { status: 409 });
     }
     if (existingPost && !draft.targetFile) {
       return NextResponse.json({
@@ -171,12 +205,18 @@ export async function POST(request) {
     const contentWithSources = appendVerifiedSources(draft.content, sources);
     const publishedContent = markPublished(contentWithSources, reviewedAt, coverImage);
     if (existingPost?.content !== publishedContent) {
-      await commitFile(`posts/${safeFile}`, publishedContent, `editorial: publicar ${safeFile}`);
+      await commitFile(
+        `posts/${safeFile}`,
+        publishedContent,
+        `editorial: publicar ${safeFile}`,
+        draft.sourceChecked ? draft.targetSha : undefined
+      );
     }
 
     drafts[index] = {
       ...draft,
       sourceUrls: sources,
+      verifiedSources,
       coverImage,
       status: "PUBLISHED",
       publishedAt,
@@ -188,6 +228,9 @@ export async function POST(request) {
 
     return NextResponse.json({ ok: true, status: "PUBLISHED", url: `/blog/${draft.slug}` });
   } catch (error) {
+    if (["STALE_FILE", "GITHUB_CONFLICT"].includes(error.code)) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
     console.error("[admin/editorial-review][POST]", error);
     return NextResponse.json({ error: error.message || "Falha no fluxo de revisão editorial." }, { status: 500 });
   }

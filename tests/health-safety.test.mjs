@@ -24,6 +24,14 @@ test("artigo seguro satisfaz as verificações editoriais obrigatórias", () => 
   assert.deepEqual(validateHealthArticle(safeArticle), []);
 });
 
+test("artigo reprova links externos que não sejam de fontes oficiais permitidas", () => {
+  const articleWithExternalLink = safeArticle.replace(
+    "Consulte a bula",
+    "Consulte [esta orientação](https://example.com/medicamentos) e a bula"
+  );
+  assert.ok(validateHealthArticle(articleWithExternalLink).some((issue) => issue.includes("link que não pertence")));
+});
+
 test("validação editorial reprova dose e ausência de contatos ou fonte oficial", () => {
   const withDose = safeArticle.replace("Consulte a bula", "Use 500 mg. Consulte a bula");
   assert.ok(validateHealthArticle(withDose).some((issue) => issue.includes("dose numérica")));

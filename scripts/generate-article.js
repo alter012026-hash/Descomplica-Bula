@@ -56,6 +56,9 @@ const args = process.argv.slice(2);
 const topicArg = args.includes("--topic")
   ? args[args.indexOf("--topic") + 1]
   : null;
+const categoryArg = args.includes("--category")
+  ? args[args.indexOf("--category") + 1]
+  : null;
 
 const countArg = args.includes("--count")
   ? parseInt(args[args.indexOf("--count") + 1], 10)
@@ -119,9 +122,7 @@ function getExistingSignatures() {
 
 function saveEditorialDraft(article, result, topic) {
   const drafts = loadJson(editorialDraftsPath, []);
-  const sourceUrls = [...new Set(
-    [...article.content.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)].map((match) => match[1])
-  )];
+  const sourceUrls = [...new Set((result.verifiedSources || []).map((source) => source.url))];
   const existingIndex = drafts.findIndex((draft) => draft.file === article.file);
   const previousHistory = existingIndex >= 0 ? drafts[existingIndex].history || [] : [];
   const draft = {
@@ -134,6 +135,10 @@ function saveEditorialDraft(article, result, topic) {
     topic,
     content: article.content,
     sourceUrls,
+    sourceCheckedAt: result.verifiedSources?.[0]?.fetchedAt || null,
+    verifiedSources: (result.verifiedSources || []).map(({ url, host, fetchedAt, characterCount }) => ({
+      url, host, fetchedAt, characterCount,
+    })),
     validationIssues: result.issues,
     status: "NEEDS_REVIEW",
     generatedAt: new Date().toISOString(),
@@ -205,7 +210,7 @@ function pickNewsTopic() {
     else if (/efeito|reaç|alerg/.test(titleLower)) category = "Efeitos e reações";
     else if (/gravidez|amament|criança|idoso/.test(titleLower)) category = "Grupos especiais";
     else if (/anvisa|recolhimento|alerta/.test(titleLower)) category = "Alertas da Anvisa";
-    else category = ag.randomItem(CATEGORIES);
+    else category = "Alertas da Anvisa";
   }
 
   const newsFact = consolidated
@@ -217,10 +222,24 @@ function pickNewsTopic() {
 
 function buildTopic() {
   if (topicArg) {
-    return { topic: topicArg, category: ag.randomItem(CATEGORIES) };
+    if (categoryArg && !CATEGORIES.includes(categoryArg)) {
+      throw new Error(`Categoria inválida: ${categoryArg}`);
+    }
+    const inferredCategory = ag.inferCategory(topicArg, SEEDS, CATEGORIES);
+    if (categoryArg && inferredCategory && categoryArg !== inferredCategory) {
+      throw new Error(`O tema parece pertencer a "${inferredCategory}", não a "${categoryArg}".`);
+    }
+    const category = categoryArg || inferredCategory;
+    if (!category || !CATEGORIES.includes(category)) {
+      throw new Error("Não foi possível definir uma categoria com segurança. Informe --category com uma categoria válida.");
+    }
+    return { topic: topicArg, category };
+  }
+  if (categoryArg && !CATEGORIES.includes(categoryArg)) {
+    throw new Error(`Categoria inválida: ${categoryArg}`);
   }
 
-  const newsTopic = pickNewsTopic();
+  const newsTopic = categoryArg ? null : pickNewsTopic();
   if (newsTopic) return newsTopic;
 
   const usedTopics = loadJson(usedTopicsLogPath, []);
@@ -230,7 +249,7 @@ function buildTopic() {
   // 15 tentativas é suficiente quando ALGUMA categoria ainda tem seed livre.
   const MAX_ATTEMPTS = 15;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    const category = ag.randomItem(CATEGORIES);
+    const category = categoryArg || ag.randomItem(CATEGORIES);
     const pool = SEEDS[category] || [];
     if (pool.length === 0) continue;
 
@@ -244,7 +263,7 @@ function buildTopic() {
   // 2ª passada (defensiva): a 1ª pode falhar por mau sorteio mesmo com seeds
   // livres em outra categoria. Varre TODAS as categorias de forma determinística
   // antes de aceitar que o pool real esgotou.
-  for (const category of CATEGORIES) {
+  for (const category of categoryArg ? [categoryArg] : CATEGORIES) {
     const pool = SEEDS[category] || [];
     const available = pool.filter((t) => !usedTopics.includes(t) && !existingSlugs.has(ag.slugify(t)));
     if (available.length > 0) {
@@ -264,7 +283,7 @@ function buildTopic() {
     "   do mesmo tópico (isso foi removido por causar posts quase-duplicados).\n"
   );
 
-  const category = ag.randomItem(CATEGORIES);
+  const category = categoryArg || ag.randomItem(CATEGORIES);
   const pool = SEEDS[category] || [`dicas sobre ${category}`];
   const topic = ag.randomItem(pool);
   // marcado explicitamente para aparecer no painel de qualidade como "pool esgotado",
@@ -351,7 +370,14 @@ async function main() {
     }
 
     console.log(`\n🔁 Regenerando conteúdo de: ${forceFileArg}\n`);
-    const category = ag.randomItem(CATEGORIES);
+    const raw = fs.readFileSync(filePath, "utf8");
+    const frontmatterEnd = raw.indexOf("\n---", 3);
+    const existingData = frontmatterEnd >= 0 ? yaml.load(raw.slice(3, frontmatterEnd)) : {};
+    const category = existingData?.category;
+    if (!CATEGORIES.includes(category)) {
+      console.error(`❌ Categoria do artigo inválida ou não configurada: ${category || "(vazia)"}`);
+      process.exit(1);
+    }
 
     try {
       const result = await ag.generateValidatedArticle({

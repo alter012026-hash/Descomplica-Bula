@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import siteConfig from "../../site.config";
 
 const colors = {
-  background: "#F5F9FC",
-  border: "#CEDDE6",
+  background: "#FFFFFF",
+  border: "#E4E7EC",
   surface: "#FFFFFF",
-  text: "#17324D",
-  muted: "#405A70",
-  primary: "#087F8C",
-  green: "#087F72",
-  red: "#C93525",
+  text: "#17212B",
+  muted: "#344054",
+  primary: "#B4232C",
+  green: "#198754",
+  red: "#B42318",
 };
 
 function getSourceError(value) {
@@ -180,6 +180,22 @@ export default function EditorialReviewPanel({ toast, onPendingCountChange }) {
                     Validação automática reprovada: {draft.validationIssues.join("; ")}
                   </div>
                 )}
+                {draft.verifiedSources?.length > 0 && (
+                  <div style={{ color: colors.muted, fontSize: 12, marginBottom: 10 }}>
+                    Fontes acessadas na geração: {(draft.verifiedSources || []).map((source) => (
+                      <span key={source.url}>
+                        {" "}
+                        <a href={source.url} target="_blank" rel="noreferrer" style={{ color: colors.primary }}>
+                          {source.host}
+                        </a>
+                        {source.fetchedAt ? ` (${new Date(source.fetchedAt).toLocaleString("pt-BR")})` : ""}
+                      </span>
+                    ))}
+                    {draft.sourceCheckFailures?.length > 0
+                      ? ` · ${draft.sourceCheckFailures.length} fonte(s) não usadas por falha de acesso`
+                      : ""}
+                  </div>
+                )}
                 <details style={{ marginBottom: 12 }}>
                   <summary style={{ color: colors.primary, cursor: "pointer", fontSize: 13 }}>Ler artigo completo</summary>
                   <pre style={{ color: colors.muted, whiteSpace: "pre-wrap", maxHeight: 420, overflow: "auto", fontSize: 12, lineHeight: 1.6 }}>
@@ -217,6 +233,7 @@ export default function EditorialReviewPanel({ toast, onPendingCountChange }) {
                   <textarea
                     value={sources[draft.id] || ""}
                     onChange={(event) => setSources((current) => ({ ...current, [draft.id]: event.target.value }))}
+                    readOnly={draft.sourceChecked === true || Boolean(draft.verifiedSources?.length)}
                     rows={3}
                     style={{ display: "block", width: "100%", marginTop: 5, background: colors.background, color: colors.text, border: `1px solid ${colors.border}`, borderRadius: 6, padding: 8 }}
                   />

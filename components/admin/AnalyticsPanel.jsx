@@ -20,9 +20,9 @@ const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "
 const WEEKDAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 const WEEKDAYS_LONG = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"];
 
-export const PALETTE = ["#087F8C", "#3D8292", "#3C91A6", "#2A8C78", "#C28A2C", "#A76A73", "#60788A", "#2B9A91"];
+export const PALETTE = ["#B4232C", "#2563EB", "#198754", "#B54708", "#8F1821", "#667085", "#0E7490", "#7A5AF8"];
 export const CHANNEL_COLORS = {
-  "Busca orgânica": "#2A8C78", Direto: "#087F8C", Social: "#A76A73", Referência: "#C28A2C", "E-mail": "#3C91A6", Pago: "#3D8292",
+  "Busca orgânica": "#198754", Direto: "#B4232C", Social: "#7A5AF8", Referência: "#B54708", "E-mail": "#2563EB", Pago: "#0E7490",
 };
 
 const UF = {
@@ -125,33 +125,33 @@ function useWidth() {
 /* ───────────────────────── estilos ───────────────────────── */
 
 export const CSS = `
-.tp{--c-primary:#087F8C;--c-violet:#3D8292;--c-text:#17324D;--c-muted:#405A70;--c-faint:#5D7182;--c-line:#D4E1E9;--c-soft:#EAF3F7;--c-card:#fff;--c-green:#087F72;--c-red:#C93525;
+.tp{--c-primary:var(--primary);--c-violet:var(--info);--c-text:var(--text);--c-muted:var(--text-secondary);--c-faint:var(--text-muted);--c-line:var(--border);--c-soft:var(--surface-2);--c-card:var(--surface);--c-green:var(--success);--c-red:var(--danger);
   display:flex;flex-direction:column;gap:18px;color:var(--c-text)}
 .tp *{box-sizing:border-box}
 .tp-hero{position:relative;overflow:hidden;border-radius:20px;padding:22px 24px;color:#fff;
-  background:radial-gradient(1200px 300px at 90% -20%,rgba(255,255,255,.22),transparent 60%),linear-gradient(120deg,#075B66 0%,#087F8C 55%,#3D8292 100%);
-  box-shadow:0 10px 30px -12px rgba(8,127,140,.42)}
+  background:radial-gradient(1200px 300px at 90% -20%,rgba(255,255,255,.16),transparent 60%),linear-gradient(120deg,#17212B 0%,#303943 100%);
+  box-shadow:0 10px 30px -12px rgba(23,33,43,.22)}
 .tp-hero h2{margin:0;font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-.02em}
 .tp-hero p{margin:4px 0 0;font-size:13.5px;opacity:.85}
 .tp-hero-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center}
 .tp-live{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);
   border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700}
-.tp-dot{width:9px;height:9px;border-radius:50%;background:#75D4BA;box-shadow:0 0 0 0 rgba(117,212,186,.7);animation:tp-pulse 1.8s infinite}
-@keyframes tp-pulse{70%{box-shadow:0 0 0 9px rgba(117,212,186,0)}100%{box-shadow:0 0 0 0 rgba(117,212,186,0)}}
+.tp-dot{width:9px;height:9px;border-radius:50%;background:#55B879;box-shadow:0 0 0 0 rgba(85,184,121,.7);animation:tp-pulse 1.8s infinite}
+@keyframes tp-pulse{70%{box-shadow:0 0 0 9px rgba(85,184,121,0)}100%{box-shadow:0 0 0 0 rgba(85,184,121,0)}}
 .tp-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .tp-seg{display:inline-flex;background:rgba(255,255,255,.16);border-radius:12px;padding:3px;gap:2px}
 .tp-seg.light{background:var(--c-soft)}
 .tp-seg button{border:0;cursor:pointer;border-radius:9px;padding:6px 13px;font-size:13px;font-weight:600;background:transparent;color:rgba(255,255,255,.85);transition:.15s}
 .tp-seg.light button{color:var(--c-muted)}
-.tp-seg button[aria-pressed=true]{background:#fff;color:var(--c-primary);font-weight:800;box-shadow:0 2px 6px rgba(23,50,77,.18)}
+.tp-seg button[aria-pressed=true]{background:#fff;color:var(--c-primary);font-weight:800;box-shadow:0 2px 6px rgba(23,33,43,.12)}
 .tp-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;border-radius:11px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .tp-btn:hover{background:rgba(255,255,255,.26)}
 .tp-btn:disabled{opacity:.6;cursor:default}
 .tp-kpis{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-.tp-card{background:var(--c-card);border:1px solid var(--c-line);border-radius:18px;padding:18px 20px;box-shadow:0 1px 2px rgba(23,50,77,.04);min-width:0;animation:tp-in .4s ease both}
+.tp-card{background:var(--c-card);border:1px solid var(--c-line);border-radius:18px;padding:18px 20px;box-shadow:0 1px 2px rgba(23,33,43,.04);min-width:0;animation:tp-in .4s ease both}
 @keyframes tp-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .tp-kpi{position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
-.tp-kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(8,127,140,.35)}
+.tp-kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(180,35,44,.18)}
 .tp-kpi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .tp-kpi-label{font-size:13px;color:var(--c-muted);font-weight:600}
 .tp-ico{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff}
@@ -159,7 +159,7 @@ export const CSS = `
 .tp-kpi-val{font-family:var(--font-display);font-size:30px;font-weight:800;letter-spacing:-.025em;line-height:1}
 .tp-kpi-sub{margin-top:7px;font-size:12px;color:var(--c-faint);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .tp-delta{font-weight:800;padding:1px 7px;border-radius:99px;font-size:11.5px}
-.tp-up{color:var(--c-green);background:rgba(8,127,114,.1)}.tp-down{color:var(--c-red);background:rgba(201,53,37,.1)}.tp-flat{color:var(--c-faint);background:var(--c-soft)}
+.tp-up{color:var(--c-green);background:rgba(25,135,84,.1)}.tp-down{color:var(--c-red);background:rgba(180,35,24,.1)}.tp-flat{color:var(--c-faint);background:var(--c-soft)}
 .tp-spark{position:absolute;right:0;bottom:0;width:46%;height:46px;opacity:.9;pointer-events:none}
 .tp-h{margin:0;font-family:var(--font-display);font-size:16.5px;font-weight:800;letter-spacing:-.01em}
 .tp-sub{margin:3px 0 0;font-size:12.5px;color:var(--c-faint)}
@@ -167,7 +167,7 @@ export const CSS = `
 .tp-grid2{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 .tp-grid3{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .tp-insights{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.tp-insight{display:flex;gap:12px;align-items:flex-start;border-radius:16px;padding:14px 16px;background:linear-gradient(135deg,#EAF3F7,#fff);border:1px solid var(--c-line)}
+.tp-insight{display:flex;gap:12px;align-items:flex-start;border-radius:16px;padding:14px 16px;background:linear-gradient(135deg,#F8FAFC,#fff);border:1px solid var(--c-line)}
 .tp-insight b{display:block;font-size:13.5px}.tp-insight span{font-size:12.5px;color:var(--c-muted)}
 .tp-emoji{font-size:22px;line-height:1}
 .tp-legend{display:flex;flex-direction:column;gap:9px;min-width:0;flex:1}
@@ -181,13 +181,13 @@ export const CSS = `
 .tp-rank-val{font-size:12.5px;color:var(--c-muted);flex:none;font-variant-numeric:tabular-nums}
 .tp-rank-sub{font-size:12px;color:var(--c-faint);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tp-bar{height:6px;background:var(--c-soft);border-radius:99px;margin-top:6px;overflow:hidden}
-.tp-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#087F8C,#3D8292)}
-.tp-chip{display:inline-block;font-size:11px;font-weight:700;color:var(--c-primary);background:rgba(8,127,140,.09);border-radius:99px;padding:1px 8px;margin-left:6px}
+.tp-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#B4232C,#8F1821)}
+.tp-chip{display:inline-block;font-size:11px;font-weight:700;color:var(--c-primary);background:rgba(180,35,44,.09);border-radius:99px;padding:1px 8px;margin-left:6px}
 .tp-empty{padding:26px 8px;text-align:center;color:var(--c-faint);font-size:14px}
 .tp-map{display:grid;gap:5px;max-width:330px;margin:0 auto}
 .tp-tile{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-size:11.5px;font-weight:800;cursor:default;transition:transform .12s}
 .tp-tile:hover{transform:scale(1.12);z-index:2}
-.tp-tooltip{position:absolute;pointer-events:none;background:#17324D;color:#fff;border-radius:12px;padding:9px 12px;font-size:12.5px;line-height:1.5;box-shadow:0 10px 24px -8px rgba(23,50,77,.5);white-space:nowrap;z-index:5}
+.tp-tooltip{position:absolute;pointer-events:none;background:#17212B;color:#fff;border-radius:12px;padding:9px 12px;font-size:12.5px;line-height:1.5;box-shadow:0 10px 24px -8px rgba(23,33,43,.35);white-space:nowrap;z-index:5}
 .tp-tooltip b{display:block;margin-bottom:2px}
 .tp-err{border-color:var(--c-red);color:var(--c-red);font-size:14px}
 .tp-table{width:100%;border-collapse:collapse;font-size:13px}
@@ -284,28 +284,28 @@ function AreaChart({ points }) {
         <svg width={w} height={H} role="img" aria-label={`Gráfico de área: ${nf.format(points.reduce((s, p) => s + p.views, 0))} visualizações no período.`}
           onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={() => setHover(null)} style={{ touchAction: "pan-y", display: "block" }}>
           <defs>
-            <linearGradient id="tpArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#087F8C" stopOpacity=".32" /><stop offset="1" stopColor="#087F8C" stopOpacity="0" /></linearGradient>
+            <linearGradient id="tpArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#B4232C" stopOpacity=".24" /><stop offset="1" stopColor="#B4232C" stopOpacity="0" /></linearGradient>
           </defs>
           {[0, 1, 2, 3, 4].map((t) => {
             const v = (maxV / 4) * t;
             return (
               <g key={t}>
-                <line x1={padL} x2={w - padR} y1={y(v)} y2={y(v)} stroke="#D4E1E9" strokeDasharray={t ? "3 5" : "0"} />
-                <text x={padL - 8} y={y(v) + 4} textAnchor="end" fontSize="11" fill="#5D7182">{nf.format(Math.round(v))}</text>
+                <line x1={padL} x2={w - padR} y1={y(v)} y2={y(v)} stroke="#E4E7EC" strokeDasharray={t ? "3 5" : "0"} />
+                <text x={padL - 8} y={y(v) + 4} textAnchor="end" fontSize="11" fill="#667085">{nf.format(Math.round(v))}</text>
               </g>
             );
           })}
           <path d={`${vLine} L${x(points.length - 1)},${y(0)} L${x(0)},${y(0)} Z`} fill="url(#tpArea)" />
-          <path d={smoothPath(visPts)} fill="none" stroke="#3D8292" strokeWidth="2" strokeDasharray="5 4" strokeLinecap="round" />
-          <path d={vLine} fill="none" stroke="#087F8C" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={smoothPath(visPts)} fill="none" stroke="#8F1821" strokeWidth="2" strokeDasharray="5 4" strokeLinecap="round" />
+          <path d={vLine} fill="none" stroke="#B4232C" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
           {points.map((p, i) => i % every === 0 && (
-            <text key={p.key} x={x(i)} y={H - 8} textAnchor="middle" fontSize="11" fill="#5D7182">{p.label}</text>
+            <text key={p.key} x={x(i)} y={H - 8} textAnchor="middle" fontSize="11" fill="#667085">{p.label}</text>
           ))}
           {hp && (
             <g>
-              <line x1={x(hover)} x2={x(hover)} y1={padT} y2={y(0)} stroke="#087F8C" strokeOpacity=".35" />
-              <circle cx={x(hover)} cy={y(hp.visitors)} r="4.5" fill="#fff" stroke="#3D8292" strokeWidth="2.5" />
-              <circle cx={x(hover)} cy={y(hp.views)} r="5.5" fill="#fff" stroke="#087F8C" strokeWidth="3" />
+              <line x1={x(hover)} x2={x(hover)} y1={padT} y2={y(0)} stroke="#B4232C" strokeOpacity=".35" />
+              <circle cx={x(hover)} cy={y(hp.visitors)} r="4.5" fill="#fff" stroke="#8F1821" strokeWidth="2.5" />
+              <circle cx={x(hover)} cy={y(hp.views)} r="5.5" fill="#fff" stroke="#B4232C" strokeWidth="3" />
             </g>
           )}
         </svg>
@@ -313,8 +313,8 @@ function AreaChart({ points }) {
       {hp && (
         <div className="tp-tooltip" style={{ left: tipLeft, top: 6 }}>
           <b>{hp.full}</b>
-          <span style={{ color: "#80D3D7" }}>●</span> {nf.format(hp.views)} visualizações<br />
-          <span style={{ color: "#B0C4D1" }}>●</span> {nf.format(hp.visitors)} visitantes
+          <span style={{ color: "#F97079" }}>●</span> {nf.format(hp.views)} visualizações<br />
+          <span style={{ color: "#D0D5DD" }}>●</span> {nf.format(hp.visitors)} visitantes
         </div>
       )}
     </div>
@@ -328,7 +328,7 @@ export function Donut({ items, colorOf, centerValue, centerLabel }) {
   return (
     <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
       <svg width="150" height="150" viewBox="0 0 150 150" role="img" aria-label={`${centerLabel}: ${items.map((i) => `${i.label} ${pctOf(i.views, total)}%`).join(", ")}`}>
-        <circle cx="75" cy="75" r={R} fill="none" stroke="#EAF3F7" strokeWidth="18" />
+        <circle cx="75" cy="75" r={R} fill="none" stroke="#F1F4F6" strokeWidth="18" />
         {total > 0 && items.map((it, idx) => {
           const len = (it.views / total) * C;
           const el = (
@@ -338,8 +338,8 @@ export function Donut({ items, colorOf, centerValue, centerLabel }) {
           acc += len;
           return el;
         })}
-        <text x="75" y="73" textAnchor="middle" fontSize="22" fontWeight="800" fill="#17324D" fontFamily="var(--font-display)">{centerValue}</text>
-        <text x="75" y="91" textAnchor="middle" fontSize="11" fill="#5D7182">{centerLabel}</text>
+        <text x="75" y="73" textAnchor="middle" fontSize="22" fontWeight="800" fill="#17212B" fontFamily="var(--font-display)">{centerValue}</text>
+        <text x="75" y="91" textAnchor="middle" fontSize="11" fill="#667085">{centerLabel}</text>
       </svg>
       <div className="tp-legend">
         {items.map((it, idx) => (
@@ -363,7 +363,7 @@ export function BarsH({ items, labelOf, subOf, total }) {
         <li key={`${labelOf(it)}-${idx}`}>
           <div className="tp-rank-top">
             <span className="tp-rank-name" title={labelOf(it)}>{labelOf(it)}</span>
-            <span className="tp-rank-val">{nf.format(it.views)} <span style={{ color: "#5D7182" }}>· {pctOf(it.views, total)}%</span></span>
+            <span className="tp-rank-val">{nf.format(it.views)} <span style={{ color: "#667085" }}>· {pctOf(it.views, total)}%</span></span>
           </div>
           {subOf && subOf(it) && <div className="tp-rank-sub">{subOf(it)}</div>}
           <div className="tp-bar"><i style={{ width: `${(it.views / max) * 100}%` }} /></div>
@@ -384,7 +384,7 @@ export function ColumnChart({ values, labels, labelEvery = 1, highlight, unit = 
             style={{ flex: 1, height: "100%", display: "flex", alignItems: "flex-end", cursor: "pointer" }}>
             <div style={{
               width: "100%", height: `${v === 0 ? 2 : Math.max(5, (v / max) * 100)}%`, borderRadius: "6px 6px 2px 2px",
-              background: v === 0 ? "#D4E1E9" : i === highlight ? "linear-gradient(180deg,#E7C57A,#C28A2C)" : hov === i ? "#3D8292" : "linear-gradient(180deg,#1595A3,#087F8C)",
+              background: v === 0 ? "#E4E7EC" : i === highlight ? "linear-gradient(180deg,#F0A44B,#B54708)" : hov === i ? "#8F1821" : "linear-gradient(180deg,#D92D3A,#B4232C)",
               transition: "background .12s",
             }} />
           </div>
@@ -392,7 +392,7 @@ export function ColumnChart({ values, labels, labelEvery = 1, highlight, unit = 
       </div>
       <div style={{ display: "flex", gap: 3, paddingTop: 6 }} aria-hidden="true">
         {labels.map((l, i) => (
-          <div key={i} style={{ flex: 1, fontSize: 10.5, color: "#5D7182", textAlign: "center", whiteSpace: "nowrap" }}>{i % labelEvery === 0 ? l : ""}</div>
+          <div key={i} style={{ flex: 1, fontSize: 10.5, color: "#667085", textAlign: "center", whiteSpace: "nowrap" }}>{i % labelEvery === 0 ? l : ""}</div>
         ))}
       </div>
       <p className="tp-sub" aria-live="polite" style={{ minHeight: 18, marginTop: 8 }}>
@@ -415,7 +415,7 @@ function BrazilTiles({ regions }) {
         const a = v ? 0.18 + 0.82 * (v / max) : 0;
         return (
           <div key={idx} className="tp-tile" title={`${UF[code]}: ${nf.format(v)} visualizações`}
-            style={{ background: v ? `rgba(8,127,140,${a})` : "#EAF3F7", color: a > 0.5 ? "#fff" : v ? "#087F8C" : "#8197A6" }}>
+            style={{ background: v ? `rgba(180,35,44,${a})` : "#F1F4F6", color: a > 0.5 ? "#fff" : v ? "#8F1821" : "#667085" }}>
             {code}
           </div>
         );
@@ -437,11 +437,11 @@ export function Card({ title, sub, children, right, delay = 0 }) {
 }
 
 function SetupNotice() {
-  const code = { background: "#EAF3F7", borderRadius: 6, padding: "1px 6px", fontSize: 13 };
+  const code = { background: "#F1F4F6", borderRadius: 6, padding: "1px 6px", fontSize: 13 };
   return (
     <div className="tp-card">
       <h2 style={{ margin: "0 0 8px", fontSize: 17, fontFamily: "var(--font-display)" }}>Falta um passo para ativar o painel</h2>
-      <p style={{ margin: "0 0 14px", fontSize: 14, color: "#405A70", lineHeight: 1.55 }}>
+      <p style={{ margin: "0 0 14px", fontSize: 14, color: "#344054", lineHeight: 1.55 }}>
         O painel precisa de um lugar para guardar as visitas (o site na Vercel não tem banco de dados). Use o Upstash Redis, que tem plano gratuito:
       </p>
       <ol style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.7 }}>
@@ -568,14 +568,14 @@ export default function AnalyticsPanel() {
       {error && <div role="alert" className="tp-card tp-err">{error}</div>}
 
       <div className="tp-kpis" style={{ opacity: loading && !data ? 0.5 : 1 }}>
-        <Kpi label="Visualizações" icon="eye" color="#087F8C" value={totals ? nf.format(totals.views) : "—"} sub={`em ${rangeLabel}`} delta={totals ? deltaOf(totals.views, totals.previousViews) : null} spark={viewsSpark} />
-        <Kpi label="Visitantes" icon="users" color="#3D8292" value={totals ? nf.format(totals.visitors) : "—"} sub="únicos por dia, somados" spark={visSpark} />
-        <Kpi label="Sessões" icon="zap" color="#3C91A6" value={totals ? nf.format(totals.sessions) : "—"} sub="visitas completas" delta={totals ? deltaOf(totals.sessions, totals.previousSessions) : null} spark={sesSpark} />
-        <Kpi label="Páginas por sessão" icon="layers" color="#2A8C78" value={totals?.pagesPerSession ?? "—"} sub="quanto mais, melhor" />
-        <Kpi label="Tempo por sessão" icon="clock" color="#C28A2C" value={totals ? fmtDur(totals.avgSeconds) : "—"} sub="tempo de leitura ativo" />
-        <Kpi label="Taxa de rejeição" icon="exit" color="#A76A73" value={totals?.bounceRate != null ? `${totals.bounceRate}%` : "—"} sub="saíram após 1 página" />
-        <Kpi label="Rolagem média" icon="mouse" color="#2B9A91" value={totals?.avgScroll != null ? `${totals.avgScroll}%` : "—"} sub="do conteúdo percorrido" />
-        <Kpi label="Hoje" icon="calendar" color="#60788A" value={totals ? nf.format(totals.today.views) : "—"} sub={totals ? `ontem: ${nf.format(totals.yesterday.views)}` : ""} />
+        <Kpi label="Visualizações" icon="eye" color="#B4232C" value={totals ? nf.format(totals.views) : "—"} sub={`em ${rangeLabel}`} delta={totals ? deltaOf(totals.views, totals.previousViews) : null} spark={viewsSpark} />
+        <Kpi label="Visitantes" icon="users" color="#2563EB" value={totals ? nf.format(totals.visitors) : "—"} sub="únicos por dia, somados" spark={visSpark} />
+        <Kpi label="Sessões" icon="zap" color="#0E7490" value={totals ? nf.format(totals.sessions) : "—"} sub="visitas completas" delta={totals ? deltaOf(totals.sessions, totals.previousSessions) : null} spark={sesSpark} />
+        <Kpi label="Páginas por sessão" icon="layers" color="#198754" value={totals?.pagesPerSession ?? "—"} sub="quanto mais, melhor" />
+        <Kpi label="Tempo por sessão" icon="clock" color="#B54708" value={totals ? fmtDur(totals.avgSeconds) : "—"} sub="tempo de leitura ativo" />
+        <Kpi label="Taxa de rejeição" icon="exit" color="#B42318" value={totals?.bounceRate != null ? `${totals.bounceRate}%` : "—"} sub="saíram após 1 página" />
+        <Kpi label="Rolagem média" icon="mouse" color="#8F1821" value={totals?.avgScroll != null ? `${totals.avgScroll}%` : "—"} sub="do conteúdo percorrido" />
+        <Kpi label="Hoje" icon="calendar" color="#667085" value={totals ? nf.format(totals.today.views) : "—"} sub={totals ? `ontem: ${nf.format(totals.yesterday.views)}` : ""} />
       </div>
 
       {insights.length > 0 && (
@@ -644,7 +644,7 @@ export default function AnalyticsPanel() {
               <BarsH items={data.countries} total={totals.views} labelOf={(c) => `${flag(c.code)}  ${countryName(c.code)}`} />
               {data.cities.length > 0 && (
                 <>
-                  <h4 style={{ margin: "20px 0 12px", fontSize: 13, color: "#405A70" }}>Principais cidades</h4>
+                  <h4 style={{ margin: "20px 0 12px", fontSize: 13, color: "#344054" }}>Principais cidades</h4>
                   <BarsH items={data.cities.slice(0, 6)} total={totals.views}
                     labelOf={(c) => `${c.city}${c.region ? `, ${c.region}` : ""}`} />
                 </>
@@ -660,7 +660,7 @@ export default function AnalyticsPanel() {
                   {data.pages.map((p) => (
                     <tr key={p.path}>
                       <td><span className="t" title={p.title}>{p.title}</span><span className="p">{p.path}</span></td>
-                      <td className="r">{nf.format(p.views)}<span style={{ color: "#5D7182" }}> · {pctOf(p.views, totals.views)}%</span></td>
+                      <td className="r">{nf.format(p.views)}<span style={{ color: "#667085" }}> · {pctOf(p.views, totals.views)}%</span></td>
                       <td className="r">{nf.format(p.entries)}</td>
                       <td className="r">{fmtDur(p.avgSeconds)}</td>
                     </tr>

@@ -1,14 +1,14 @@
 /* ================================================================
    DESCOMPLICA BULA — Design system
    ----------------------------------------------------------------
-   Conceito: informação acessível, confiança e cuidado. Azul-petróleo e
-   verde hospitalar como base, com âmbar discreto para destaques.
+   Conceito: informação acessível, confiança e cuidado. Vermelho institucional
+   para a marca, com branco e neutros como base.
 
    Paleta
-     Azul-petróleo #087F8C   ação e identidade
-     Âmbar         #C58A1B   destaque e atenção
-     Tinta         #17324D   texto principal
-     Papel         #F5F9FC   fundo claro
+     Vermelho      #B4232C   ação e identidade
+     Grafite       #17212B   texto principal
+     Branco        #FFFFFF   superfície principal
+     Cinza-claro   #F8FAFC   fundo secundário
 
    Tipografia
      Bricolage Grotesque  títulos e interface (eixos de largura/óptico)
@@ -20,47 +20,66 @@
    ================================================================ */
 
 :root {
-  /* ---- marca ---- */
-  --ink:            #17324D;
-  --on-ink:         #F5F9FC;
-  --primary:        #087F8C;
-  --primary-light:  #1595A3;
-  --primary-dark:   #06636D;
+  /* ---- design tokens oficiais ---- */
+  --color-primary:       #B4232C;
+  --color-primary-dark:  #8F1821;
+  --color-primary-light: #FCE8EA;
+  --color-chip-text:     #8F1821;
+  --color-background:    #FFFFFF;
+  --color-surface:       #F8FAFC;
+  --color-surface-alt:   #F1F4F6;
+  --color-text:          #17212B;
+  --color-text-muted:    #667085;
+  --color-border:        #E4E7EC;
+  --color-success:       #198754;
+  --color-warning:       #B54708;
+  --color-danger:        #B42318;
+  --color-info:          #2563EB;
+  --color-focus:         rgba(180, 35, 44, 0.35);
+
+  /* ---- compatibilidade com os tokens usados pelos componentes ---- */
+  --ink:            var(--color-text);
+  --on-ink:         var(--color-background);
+  --primary:        var(--color-primary);
+  --primary-light:  #D92D3A;
+  --primary-dark:   var(--color-primary-dark);
   --on-primary:     #FFFFFF;
-  --link:           #087685;
-  --hl:             #C58A1B;
-  --hl-soft:        #FBF2DD;
-  --on-hl:          #17324D;
-  --accent:         #A85D18;
-  --accent-light:   #C9782C;
-  --accent-dark:    #804513;
-  --gold:           #A87517;
-  --success:        #087F72;
-  --success-soft:   #E2F2EE;
-  --focus:          #087F8C;
+  --link:           var(--color-primary);
+  --hl:             var(--color-primary);
+  --hl-soft:        var(--color-primary-light);
+  --on-hl:          #FFFFFF;
+  --accent:         var(--color-warning);
+  --accent-light:   #D97706;
+  --accent-dark:    #8A3F06;
+  --gold:           var(--color-warning);
+  --success:        var(--color-success);
+  --success-soft:   #E8F5EC;
+  --danger:         var(--color-danger);
+  --info:           var(--color-info);
+  --focus:          var(--color-focus);
 
   /* ---- superfícies ---- */
-  --bg:             #F5F9FC;
+  --bg:             var(--color-background);
   --surface:        #FFFFFF;
-  --surface-2:      #EAF3F7;
-  --surface-3:      #D8E8EF;
-  --text:           #17324D;
-  --text-secondary: #405A70;
-  --text-muted:     #5D7182;
-  --border:         #CEDDE6;
-  --border-soft:    #E3EDF2;
-  --glass-border:   rgba(23, 50, 77, 0.10);
-  --header-bg:      rgba(245, 249, 252, 0.88);
-  --hero-bg:        #075B66;
-  --hero-fg:        #FFFFFF;
-  --hero-ring:      #FFFFFF;
-  --footer-bg:      #102B43;
+  --surface-2:      var(--color-surface);
+  --surface-3:      var(--color-surface-alt);
+  --text:           var(--color-text);
+  --text-secondary: #344054;
+  --text-muted:     var(--color-text-muted);
+  --border:         var(--color-border);
+  --border-soft:    #F1F3F5;
+  --glass-border:   rgba(23, 33, 43, 0.10);
+  --header-bg:      rgba(255, 255, 255, 0.92);
+  --hero-bg:        #F8FAFC;
+  --hero-fg:        #17212B;
+  --hero-ring:      #B4232C;
+  --footer-bg:      #17212B;
 
   /* ---- sombras (usadas com parcimônia: a estrutura vem de bordas) ---- */
-  --shadow-sm:      0 1px 2px rgba(23, 50, 77, 0.08);
-  --shadow-md:      0 10px 26px -10px rgba(23, 50, 77, 0.22);
-  --shadow-lg:      0 22px 44px -16px rgba(23, 50, 77, 0.30);
-  --shadow-xl:      0 34px 70px -20px rgba(23, 50, 77, 0.38);
+  --shadow-sm:      0 1px 2px rgba(23, 33, 43, 0.06);
+  --shadow-md:      0 8px 20px -10px rgba(23, 33, 43, 0.14);
+  --shadow-lg:      0 18px 36px -16px rgba(23, 33, 43, 0.18);
+  --shadow-xl:      0 24px 48px -20px rgba(23, 33, 43, 0.2);
 
   /* ---- tipografia (variáveis injetadas por next/font em layout.js) ---- */
   --font-display:   var(--f-display), "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
@@ -94,60 +113,81 @@
 }
 
 [data-theme="dark"] {
-  --ink:            #EAF3F8;
-  --on-ink:         #0B1724;
-  --primary:        #5BC0C8;
-  --primary-light:  #80D3D7;
-  --primary-dark:   #3295A0;
-  --on-primary:     #0B1724;
-  --link:           #80D3D7;
-  --hl:             #D9AA52;
-  --hl-soft:        #3D3421;
-  --on-hl:          #17324D;
-  --accent:         #F0B66A;
-  --accent-light:   #F5C98B;
-  --accent-dark:    #D89543;
-  --success:        #62C6B3;
-  --success-soft:   #173A3A;
-  --focus:          #D9AA52;
+  --color-primary:       #D92D3A;
+  --color-primary-dark:  #B4232C;
+  --color-primary-light: #4A2026;
+  --color-chip-text:     #FF929A;
+  --color-background:    #101418;
+  --color-surface:       #171C21;
+  --color-surface-alt:   #20262D;
+  --color-text:          #F8FAFC;
+  --color-text-muted:    #A7B0BA;
+  --color-border:        #303943;
+  --color-success:       #55B879;
+  --color-warning:       #F0A44B;
+  --color-danger:        #F97066;
+  --color-info:          #75A7FF;
+  --color-focus:         rgba(249, 112, 121, 0.55);
 
-  --bg:             #0B1724;
-  --surface:        #122334;
-  --surface-2:      #1A3043;
-  --surface-3:      #254258;
-  --text:           #EAF3F8;
-  --text-secondary: #C1D2DF;
-  --text-muted:     #9CB2C1;
-  --border:         #345267;
-  --border-soft:    #263F52;
-  --glass-border:   rgba(234, 243, 248, 0.12);
-  --header-bg:      rgba(11, 23, 36, 0.86);
-  --hero-bg:        #0D4A55;
-  --footer-bg:      #07131F;
+  --ink:            var(--color-text);
+  --on-ink:         var(--color-background);
+  --primary:        var(--color-primary);
+  --primary-light:  #F97079;
+  --primary-dark:   var(--color-primary-dark);
+  --on-primary:     #FFFFFF;
+  --link:           #FF929A;
+  --hl:             var(--color-primary);
+  --hl-soft:        var(--color-primary-light);
+  --on-hl:          #FFFFFF;
+  --accent:         var(--color-warning);
+  --accent-light:   #F6B96F;
+  --accent-dark:    #D97706;
+  --gold:           var(--color-warning);
+  --success:        var(--color-success);
+  --success-soft:   #183526;
+  --danger:         var(--color-danger);
+  --info:           var(--color-info);
+  --focus:          var(--color-focus);
+
+  --bg:             var(--color-background);
+  --surface:        var(--color-surface);
+  --surface-2:      var(--color-surface-alt);
+  --surface-3:      #2B333C;
+  --text:           var(--color-text);
+  --text-secondary: #D0D5DD;
+  --text-muted:     var(--color-text-muted);
+  --border:         var(--color-border);
+  --border-soft:    #252C33;
+  --glass-border:   rgba(248, 250, 252, 0.12);
+  --header-bg:      rgba(16, 20, 24, 0.92);
+  --hero-bg:        #171C21;
+  --hero-fg:        #F8FAFC;
+  --hero-ring:      #D92D3A;
+  --footer-bg:      #0B0F12;
 
   --shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md:      0 10px 26px -10px rgba(0, 0, 0, 0.6);
-  --shadow-lg:      0 22px 44px -16px rgba(0, 0, 0, 0.7);
-  --shadow-xl:      0 34px 70px -20px rgba(0, 0, 0, 0.8);
+  --shadow-md:      0 8px 20px -10px rgba(0, 0, 0, 0.55);
+  --shadow-lg:      0 18px 36px -16px rgba(0, 0, 0, 0.65);
+  --shadow-xl:      0 24px 48px -20px rgba(0, 0, 0, 0.72);
 }
 
 @media (min-width: 720px)  { :root { --gutter: 32px; --header-h: 68px; } }
 @media (max-width: 859px)  { :root { --dock-h: 68px; } }
 
-/* ── Cor por categoria: tudo derivado de --h (matiz) ───────────── */
+/* ── Cor por categoria: identificação consistente com a marca ───── */
 .cat {
-  --cat:       hsl(var(--h, 195) 58% 44%);
-  --cat-text:  hsl(var(--h, 195) 65% 27%);
-  --cat-soft:  hsl(var(--h, 195) 52% 96%);
-  --cat-mid:   hsl(var(--h, 195) 48% 89%);
-  --cat-deep:  hsl(var(--h, 195) 55% 20%);
+  --cat:       var(--color-primary);
+  --cat-text:  var(--color-primary-dark);
+  --cat-soft:  var(--color-primary-light);
+  --cat-mid:   var(--color-primary-light);
+  --cat-deep:  var(--color-primary-dark);
 }
 [data-theme="dark"] .cat {
-  --cat:       hsl(var(--h, 195) 64% 62%);
-  --cat-text:  hsl(var(--h, 195) 58% 80%);
-  --cat-soft:  hsl(var(--h, 195) 38% 15%);
-  --cat-mid:   hsl(var(--h, 195) 40% 24%);
-  --cat-deep:  hsl(var(--h, 195) 52% 14%);
+  --cat:       var(--color-primary);
+  --cat-text:  #FF929A;
+  --cat-soft:  var(--color-primary-light);
+  --cat-mid:   #5B252C;
+  --cat-deep:  #35191D;
 }
 
 /* ── Reset e base ──────────────────────────────────────────────── */
@@ -238,8 +278,8 @@ time, .tabular, .post-card-date, .post-card-reading, .article-meta-item {
 .btn:hover, .hero-cta:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .btn:active, .hero-cta:active { transform: translateY(0) scale(0.98); box-shadow: none; }
 
-.btn--hl { background: var(--hl); color: var(--on-hl); }
-.btn--hl:hover { background: #D9AA52; }
+.btn--hl { background: var(--primary); color: var(--on-primary); }
+.btn--hl:hover { background: var(--primary-dark); }
 .btn--ghost { background: transparent; color: inherit; border-color: currentColor; }
 .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); }
 .btn--outline { background: transparent; color: var(--text); border-color: var(--border); }
@@ -258,20 +298,20 @@ time, .tabular, .post-card-date, .post-card-reading, .article-meta-item {
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--cat-text, var(--text));
-  background: var(--cat-mid, var(--surface-2));
+  color: var(--color-chip-text);
+  background: var(--color-primary-light);
   white-space: nowrap;
 }
 .chip::before, .post-card-category::before, .article-cat-badge::before {
   content: "";
   width: 9px; height: 9px;
   border-radius: 50%;
-  background: var(--cat, var(--primary));
+  background: var(--color-primary);
   flex: none;
 }
 
 /* ── Capa decorativa com cápsulas ───────────────────────────────────
-   Máscara monocromática colorida pela categoria; posições determinísticas por slug. */
+   Máscara monocromática com a cor institucional; posições por slug. */
 .cover {
   position: relative;
   overflow: hidden;
