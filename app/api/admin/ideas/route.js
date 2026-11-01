@@ -3,10 +3,27 @@ import { checkAdminAuth } from "../../../../lib/admin-auth";
 import { generateValidatedArticle, buildArticleFile } from "../../../../lib/article-generator";
 import { commitFile, getFile } from "../../../../lib/github-commit";
 import config from "../../../../site.config.js";
+import healthTopics from "../../../../lib/health-topics";
+import editorialPlan from "../../../../lib/editorial-plan";
 
 const SIGNATURES_REPO_PATH = ".content-signatures.json";
 const QUALITY_LOG_REPO_PATH = ".quality-log.json";
 const EDITORIAL_DRAFTS_REPO_PATH = ".editorial-drafts.json";
+const { MAX_EDITORIAL_PLAN_ITEMS, normalizeEditorialPlan } = editorialPlan;
+
+export async function GET() {
+  if (!checkAdminAuth()) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
+  return NextResponse.json({
+    maxItems: MAX_EDITORIAL_PLAN_ITEMS,
+    categories: config.generation.categories.map((name) => ({
+      name,
+      topics: Array.isArray(healthTopics[name]) ? healthTopics[name] : [],
+    })),
+  });
+}
 
 /**
  * POST /api/admin/ideas
@@ -23,13 +40,36 @@ export async function POST(request) {
   }
 
   try {
-    const { doubts, category } = await request.json();
-
-    if (!Array.isArray(doubts) || doubts.length === 0) {
-      return NextResponse.json({ error: "Envie ao menos uma dúvida." }, { status: 400 });
+    const body = await request.json();
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "O corpo da requisição deve ser um objeto." }, { status: 400 });
+    }
+    let articles;
+    if (Array.isArray(body.plan)) {
+      articles = normalizeEditorialPlan(
+        body.plan,
+        config.generation.categories,
+        healthTopics
+      );
+    } else {
+      const { doubts, category } = body;
+      if (!Array.isArray(doubts) || doubts.length === 0) {
+        return NextResponse.json({ error: "Envie ao menos uma dúvida." }, { status: 400 });
+      }
+      const selectedDoubts = doubts.slice(0, MAX_EDITORIAL_PLAN_ITEMS);
+      if (selectedDoubts.some((topic) => typeof topic !== "string" || !topic.trim())) {
+        return NextResponse.json(
+          { error: "Cada dúvida deve ser um tema de texto não vazio." },
+          { status: 400 }
+        );
+      }
+      const chosenCategory = category || config.generation.categories[0];
+      if (!config.generation.categories.includes(chosenCategory)) {
+        return NextResponse.json({ error: "Categoria inválida." }, { status: 400 });
+      }
+      articles = selectedDoubts.map((topic) => ({ topic: topic.trim(), category: chosenCategory }));
     }
 
-    const chosenCategory = category || config.generation.categories[0];
     const generated = [];
     const errors = [];
 
@@ -45,14 +85,11 @@ export async function POST(request) {
     const draftsFile = await getFile(EDITORIAL_DRAFTS_REPO_PATH);
     const editorialDrafts = draftsFile ? JSON.parse(draftsFile.content || "[]") : [];
 
-    for (const rawDoubt of doubts.slice(0, 5)) { // máx 5 por vez
-      const topic = rawDoubt.trim();
-      if (!topic) continue;
-
+    for (const { topic, category } of articles) {
       try {
         const result = await generateValidatedArticle({
           topic,
-          category: chosenCategory,
+          category,
           generation: config.generation,
           existingSignatures: signatures.map((s) => ({ slug: s.slug, words: s.words })),
         });
@@ -61,7 +98,7 @@ export async function POST(request) {
           title: result.title,
           body: result.body,
           topic,
-          category: chosenCategory,
+          category,
         });
 
         const sourceUrls = [...new Set(
@@ -107,6 +144,7 @@ export async function POST(request) {
 
         generated.push({
           topic,
+          category,
           file: article.file,
           words: result.wordCount,
           provider: result.provider,
@@ -115,7 +153,7 @@ export async function POST(request) {
           issues: result.issues,
         });
       } catch (err) {
-        errors.push({ topic, error: err.message });
+        errors.push({ topic, category, error: err.message });
       }
     }
 

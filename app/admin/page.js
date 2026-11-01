@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import RichEditor from "../../components/admin/RichEditor";
 import EditorialReviewPanel from "../../components/admin/EditorialReviewPanel";
+import EditorialPlanPanel from "../../components/admin/EditorialPlanPanel";
 import WeeklyFeaturedPanel from "../../components/admin/WeeklyFeaturedPanel";
 import TrafficTabs from "../../components/admin/TrafficTabs";
 import { markdownToHtml, htmlToMarkdown } from "../../lib/markdown-html";
@@ -2470,6 +2471,7 @@ const TABS = [
   { id: "overview", label: "Visão geral", shortLabel: "Início", hint: "O que precisa da sua atenção hoje." },
   { id: "traffic", label: "Tráfego", shortLabel: "Tráfego", hint: "Visitas ao site: visão geral anônima e, para quem aceitou os cookies, cada visita em detalhe." },
   { id: "editorial", label: "Aprovações editoriais", shortLabel: "Revisar", hint: "Rascunhos aguardando revisão antes de publicar." },
+  { id: "planning", label: "Planejamento editorial", shortLabel: "Planejar", hint: "Distribua os próximos artigos pelas categorias e escolha um tema para cada pauta." },
   { id: "editor", label: "Artigos", shortLabel: "Artigos", hint: "Escreva e edite artigos com o editor visual." },
   { id: "weekly", label: "Destaque semanal", shortLabel: "Destaque", hint: "O artigo em evidência na home esta semana." },
   { id: "newsletter", label: "Newsletter", shortLabel: "Newsletter", hint: "Inscritos e envio diário por e-mail." },
@@ -2612,6 +2614,12 @@ export default function AdminPage() {
             <EditorialReviewPanel
               toast={showToast}
               onPendingCountChange={setPendingEditorialCount}
+            />
+          )}
+          {tab === "planning" && (
+            <EditorialPlanPanel
+              toast={showToast}
+              onReview={() => setTab("editorial")}
             />
           )}
           {tab === "weekly" && <WeeklyFeaturedPanel toast={showToast} />}
