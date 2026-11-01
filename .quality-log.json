@@ -12,5 +12,13 @@
     "similarTo": null,
     "status": "NEEDS_REVIEW",
     "issues": []
+  },
+  {
+    "timestamp": "2026-11-01T13:21:51.201Z",
+    "topic": "Outubro Rosa: conheça os direitos garantidos às mulheres durante o tratamento do câncer - agenciasp.sp.gov.br",
+    "category": "Alertas da Anvisa",
+    "status": "erro",
+    "issues": [],
+    "error": "Todos os provedores falharam — Cerebras: CEREBRAS_API_KEY ausente | Grok: GROK_API_KEY ausente | Groq: Groq(llama-3.3-70b-versatile) HTTP 404 | OpenRouter: OPENROUTER_API_KEY ausente | Gemini: GEMINI_API_KEY ausente"
   }
 ]
