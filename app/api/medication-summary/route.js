@@ -7,6 +7,7 @@ import {
 } from "../../../lib/medication-leaflet";
 import { buildMedicationSummaryPrompt, parseMedicationSummary } from "../../../lib/medication-summary";
 import { generateMedicationSummary } from "../../../lib/medication-summary-ai";
+import { getMedicationSummaryEnabled } from "../../../lib/feature-flags";
 import { getUrgentResponse } from "../../../lib/medical-safety";
 import siteConfig from "../../../site.config";
 
@@ -20,6 +21,20 @@ const SUMMARY_LIMIT = { limit: 3, windowMs: 10 * 60 * 1000 };
 
 export async function POST(request) {
   try {
+    let enabled;
+    try {
+      enabled = await getMedicationSummaryEnabled();
+    } catch (error) {
+      console.error("[medication-summary][FEATURE_FLAG]", error.message);
+      return NextResponse.json(
+        { error: "O resumo da bula está indisponível porque não foi possível consultar a configuração." },
+        { status: 503 }
+      );
+    }
+    if (!enabled) {
+      return NextResponse.json({ error: "O resumo da bula está desativado no momento." }, { status: 404 });
+    }
+
     const contentLength = Number(request.headers.get("content-length"));
     if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
       return NextResponse.json({ error: "O PDF deve ter no máximo 4 MB." }, { status: 413 });

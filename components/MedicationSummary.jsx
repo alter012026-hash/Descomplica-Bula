@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SECTIONS = [
   ["purpose", "Para que serve"],
@@ -12,6 +12,7 @@ const SECTIONS = [
 ];
 
 export default function MedicationSummary() {
+  const [enabled, setEnabled] = useState(false);
   const [medicineName, setMedicineName] = useState("");
   const [strength, setStrength] = useState("");
   const [leafletPdf, setLeafletPdf] = useState(null);
@@ -19,6 +20,20 @@ export default function MedicationSummary() {
   const [error, setError] = useState("");
   const [summary, setSummary] = useState(null);
   const officialLeafletUrl = "https://consultas.anvisa.gov.br/#/bulario/";
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/medication-summary/status", { cache: "no-store" })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Não foi possível consultar a disponibilidade.");
+        if (active) setEnabled(data.enabled === true);
+      })
+      .catch((requestError) => {
+        console.error("[medication-summary][status]", requestError.message);
+      });
+    return () => { active = false; };
+  }, []);
 
   function handlePdfChange(event) {
     const selected = event.target.files?.[0] || null;
@@ -75,8 +90,12 @@ export default function MedicationSummary() {
     }
   }
 
+  if (!enabled) return null;
+
   return (
-    <section className="med-summary" aria-labelledby="med-summary-title">
+    <section className="section section--alt home-med-summary">
+      <div className="container">
+        <section className="med-summary" aria-labelledby="med-summary-title">
       <div className="med-summary-head">
         <span className="med-summary-kicker">Ferramenta informativa</span>
         <h2 id="med-summary-title">Resumo da bula</h2>
@@ -182,6 +201,8 @@ export default function MedicationSummary() {
           </a>
         </div>
       )}
+        </section>
+      </div>
     </section>
   );
 }

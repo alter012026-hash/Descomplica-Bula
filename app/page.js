@@ -48,11 +48,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--alt home-med-summary">
-        <div className="container">
-          <MedicationSummary />
-        </div>
-      </section>
+      <MedicationSummary />
 
       {posts.length > 0 && (
         <section className="section section--alt">
