@@ -2548,6 +2548,7 @@ const TABS = [
   { id: "editor", label: "Artigos", shortLabel: "Artigos", hint: "Escreva e edite artigos com o editor visual." },
   { id: "weekly", label: "Destaque semanal", shortLabel: "Destaque", hint: "O artigo em evidência na home esta semana." },
   { id: "newsletter", label: "Newsletter", shortLabel: "Newsletter", hint: "Inscritos e envio diário por e-mail." },
+  { id: "config", label: "Configurações", shortLabel: "Config.", hint: "Ajustes gerais do site e controle de funcionalidades." },
 ];
 
 /* ─── PÁGINA PRINCIPAL ─── */
@@ -2691,6 +2692,7 @@ export default function AdminPage() {
           {tab === "weekly" && <WeeklyFeaturedPanel toast={showToast} />}
           {tab === "editor" && <ManualComposerTab toast={showToast} mode="manual" />}
           {tab === "newsletter" && <NewsletterTab toast={showToast} />}
+          {tab === "config" && <ConfigTab toast={showToast} />}
         </main>
       </div>
 
