@@ -149,15 +149,6 @@ jobs:
             sleep 5
           done
 
-      - name: Deploy Vercel
-        if: steps.changes.outputs.has_changes == 'true'
-        env:
-          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
-        run: |
-          if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
-            curl -s -X POST "$VERCEL_DEPLOY_HOOK"
-          fi
-
       - name: Summary
         if: always()
         run: |
